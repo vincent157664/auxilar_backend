@@ -67,55 +67,23 @@ export let accountRoute = [
             })
             .code(409);
         }
-        // console.log("account register request ---->", request.payload);
 
         const newAccount = new Account(request.payload);
         const { password } = newAccount;
         const hash = await bcrypt.hash(password, 10);
         newAccount.password = hash;
 
-        // const result = await newAccount.save();
         const token = Jwt.sign({ newAccount: newAccount }, config.jwtSecret, {
           expiresIn: "1day",
         });
 
         const baseUrl = `${request.server.info.protocol}://${request.info.host}`;
-        // console.log(baseUrl);
-        // const content =
-
-        // return response
-        // .response({
-        //   email: result.email,
-        //   first_name: result.first_name,
-        //   last_name: result.last_name,
-        // })
-        // .code(201);
-
-        // front-end URL
-        // Create a transporter object using the SMTP transport
-        // const transporter = nodemailer.createTransport({
-        //   service: "Gmail",
-        //   auth: {
-        //     user: "oliver970315@gmail.com", // replace with your gmail address
-        //     pass: "Qwe1234!@#$" // replace with your gmail password or app-specific password if enabled
-        //   }
+        //         const ses = new AWS.SES({
+        //   region: config.awsRegion,
+        //   accessKeyId: config.awsAccessKeyId,
+        //   secretAccessKey: config.awsSecretAccessKey,
         // });
-        // console.log("1");
-        // const content = `<div style="background-color: #f2f2f2; padding: 20px; border-radius: 10px;"><h1 style="font-size: 36px; color: #333; margin-bottom: 20px;">Hello</h1><p style="font-size: 18px; color: #666; margin-bottom: 20px;">Welcome To Homepage</p><p style="font-size: 18px; color: #666; margin-bottom: 40px;">This is your email verification link. Please click the button below to verify your email:</p><a href="${baseUrl}/api/v1/user/verify-email/${token}" style="background-color: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 10px; font-size: 18px;">Verify Email</a></div>`;
-        const ses = new AWS.SES({
-          region: config.awsRegion,
-          accessKeyId: config.awsAccessKeyId,
-          secretAccessKey: config.awsSecretAccessKey,
-        });
 
-        // const content = `Hi ${request.payload["first_name"]} ${request.payload["last_name"]}
-        //                 Thanks for your interest in joining Auxilar! To complete your registration, we need you to
-        //                 verify your email address."http://3.88.116.42:3000/account/verify-email/${token}"
-        //                 Verify Email!
-        //                 Please note that not all applications to join Auxilar are accepted.
-        //                 We will notify you of our decision by email within 24 hours.
-        //                 Thanks for your time,
-        //                 The Auxilar Team`;
         const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
@@ -148,32 +116,33 @@ export let accountRoute = [
           padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
           Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
-        const emailParams = {
-          Source: "galaxydragon0702@gmail.com",
-          Destination: {
-            ToAddresses: [newAccount.email],
-          },
-          Message: {
-            Subject: {
-              Data: "Verify Email",
-            },
-            Body: {
-              Html: {
-                Data: content,
-              },
-            },
-          },
-        };
+        // const emailParams = {
+        //   Source: "galaxydragon0702@gmail.com",
+        //   Destination: {
+        //     ToAddresses: [newAccount.email],
+        //   },
+        //   Message: {
+        //     Subject: {
+        //       Data: "Verify Email",
+        //     },
+        //     Body: {
+        //       Html: {
+        //         Data: content,
+        //       },
+        //     },
+        //   },
+        // };
 
-        ses.sendEmail(emailParams, (err, data) => {
-          if (err) {
-            console.log("Error sending email:", err);
-          } else {
-            console.log("Email sent successfully:", data);
-          }
-        });
+        // ses.sendEmail(emailParams, (err, data) => {
+        //   if (err) {
+        //     console.log("Error sending email:", err);
+        //   } else {
+        //     console.log("Email sent successfully:", data);
+        //   }
+        // });
 
         // sendMail(newAccount.email, content);
+        sendMail(email, content);
         return response
           .response({
             status: "ok",

@@ -44,9 +44,7 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `POST api/v1/client request from ${request.auth.credentials.email}`
-        );
+
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -57,10 +55,8 @@ export let clientRoute = [
             .response({ status: "err", err: "Not allowed" })
             .code(403);
         }
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------------------", data);
 
         let birthday: Date = new Date("<yyyy-mm-dd>");
         birthday = data["birthday"];
@@ -105,7 +101,6 @@ export let clientRoute = [
           "last_name",
           "email",
         ]);
-        console.log(`response data: ${responseData}`);
 
         // return response.response({ status: 'ok', data: 'Profile created successfully' }).code(201);
         return response
@@ -128,14 +123,11 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/client/ request from ${request.auth.credentials.email}`
-        );
+
         const client = await Client.findOne({
           account: request.auth.credentials.accountId,
         });
         if (!client) {
-          console.log("Profile not found!");
           return response
             .response({ status: "err", err: "Profile not found!" })
             .code(404);
@@ -144,8 +136,7 @@ export let clientRoute = [
           "first_name",
           "last_name",
         ]);
-        console.log("request success");
-        console.log(`response data : ${responseData}`);
+
         return response
           .response({ status: "ok", data: responseData })
           .code(200);
@@ -176,17 +167,12 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/client/summary request from ${request.auth.credentials.email}`
-        );
+
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
-
         const client = await Client.findOneAndUpdate(
           { account: account.id },
           {
@@ -200,7 +186,6 @@ export let clientRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -234,16 +219,12 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/client/avatar request from ${request.auth.credentials.email}`
-        );
+
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const client = await Client.findOneAndUpdate(
           { account: account.id },
@@ -257,8 +238,6 @@ export let clientRoute = [
         const responseData = await Client.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -292,16 +271,12 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/client/peronal-info request from ${request.auth.credentials.email}`
-        );
+
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           country: data["country"],
@@ -322,7 +297,6 @@ export let clientRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -356,16 +330,12 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/client/social-media request from ${request.auth.credentials.email}`
-        );
+
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           social_media: data["social_media"],
@@ -382,7 +352,6 @@ export let clientRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -416,16 +385,12 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/client/social-media request from ${request.auth.credentials.email}`
-        );
+        
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           payment_info: data["payment_info"],
@@ -442,7 +407,6 @@ export let clientRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -467,13 +431,10 @@ export let clientRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `DELETE api/v1/client request from ${request.auth.credentials.email}`
-        );
+
         const deleteStatus = await Client.deleteOne({
           account: request.auth.credentials.accountId,
         });
-        console.log("delete result ----------->", deleteStatus);
         if (deleteStatus.deletedCount)
           return response
             .response({ status: "ok", data: "Successfuly deleted!" })

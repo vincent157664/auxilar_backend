@@ -150,23 +150,12 @@ const ExpertSchema = new Schema({
   },
 
   education: {
-    course: {
-      type: String,
-      required: true,
-    },
-
-    university: {
-      type: String,
-      required: true,
-    },
-    location: {
-      type: String,
-      required: true,
-    },
-    from: {
-      type: Date,
-      required: true,
-    },
+    type: Array,
+    required: false,
+  },
+  certiification: {
+    type: Array,
+    required: false,
   },
 });
 

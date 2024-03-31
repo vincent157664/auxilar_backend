@@ -48,10 +48,6 @@ export let proposalRoute = [
       handler: async (request: Request, response: ResponseToolkit) => {
         try {
           const currentDate = new Date().toUTCString();
-          console.log(
-            `POST api/v1/proposal/${request.params.jobId} 
-          request from ${request.auth.credentials.email} Time: ${currentDate}`
-          );
 
           // Check whether account is expert
           const account = await Account.findOne({
@@ -87,10 +83,7 @@ export let proposalRoute = [
             _id: request.params.jobId,
             "proposals.expert.email": account.email,
           });
-          console.log(
-            "request.params.jobId--------------------",
-            request.params.jobId
-          );
+
           if (existingProposal) {
             return response
               .response({ status: "err", err: "Proposal already exist!" })
@@ -116,7 +109,6 @@ export let proposalRoute = [
           });
           if (invited_expert) {
             proposalField["expert"]["invited_status"] = true;
-            console.log("proposalField---------->", proposalField);
           }
           if (data["proposalData"]["mentors"]) {
             // Check whether mentors exist
@@ -183,15 +175,10 @@ export let proposalRoute = [
 
               const attached_file = fileItem;
 
-              console.log(
-                "-------------here-----------",
-                attached_file.hapi.filename
-              );
               const uploadStream = bucket.openUploadStream(
                 attached_file.hapi.filename
               );
               uploadStream.on("finish", async (file) => {
-                // record attached_files info to database
                 const attachedProposal = await Job.findOneAndUpdate(
                   {
                     _id: request.params.jobId,
@@ -262,12 +249,8 @@ export let proposalRoute = [
       handler: async (request: Request, response: ResponseToolkit) => {
         try {
           const currentDate = new Date().toUTCString();
-          console.log(
-            `PUT api/v1/proposal/${request.params.jobId} 
-          request from ${request.auth.credentials.email} Time: ${currentDate}`
-          );
 
-          // Check whether account is expert
+                // Check whether account is expert
           const account = await Account.findOne({
             email: request.auth.credentials.email,
           });
@@ -322,10 +305,6 @@ export let proposalRoute = [
               .code(404);
           }
 
-          console.log(
-            "data[proposal_status]------------>",
-            data["proposalData"]["proposal_status"]
-          );
 
           // receive field
           const proposalField = {
@@ -339,10 +318,7 @@ export let proposalRoute = [
           };
 
           if (data["proposalData"]["mentors"].length) {
-            console.log(
-              "data[proposalData][mentors]------------->>>>>>>>>>",
-              data["proposalData"]["mentors"]
-            );
+   
             const mentor_check = [];
             data["proposalData"]["mentors"].forEach((item) => {
               mentor_check.push({
@@ -478,8 +454,7 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/proposal/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
+
 
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -490,25 +465,7 @@ export let proposalRoute = [
         // check account whether client if account is client display job and visisble proposals
         if (account.account_type === "client") {
           proposal = await Job.aggregate([
-            // {
-            //   $lookup: {
-            //     from: "experts",
-            //     localField: "proposals.expert.id",
-            //     foreignField: "account",
-            //     as: "expertData",
-            //     pipeline: [
-            //       {
-            //         $project: {
-            //           avatar: 1,
-            //           first_name: 1,
-            //           last_name: 1,
-            //           skills: 1,
-            //           majors: 1,
-            //         },
-            //       },
-            //     ],
-            //   },
-            // },
+
             {
               $match: {
                 _id: new ObjectId(request.params.jobId),
@@ -547,19 +504,7 @@ export let proposalRoute = [
                 expertData: 1,
               },
             },
-            // {
-            //   $project: {
-            //     proposals: {
-            //       $filter: {
-            //         input: "$proposals",
-            //         as: "proposal",
-            //         cond: {
-            //           $eq: ["$$proposal.proposal_status", 1],
-            //         },
-            //       },
-            //     },
-            //   },
-            // },
+
           ]);
           if (!proposal) {
             return response
@@ -613,7 +558,6 @@ export let proposalRoute = [
               .code(404);
           }
         } else {
-          console.log("account.id ------------------", account.id);
           proposal = await Job.aggregate([
             {
               $lookup: {
@@ -700,8 +644,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`DELETE api/v1/proposal/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -718,10 +660,7 @@ export let proposalRoute = [
           _id: request.params.jobId,
           "proposals.expert.email": account.email,
         });
-        console.log(
-          "existingproposal ------------->>>>>>>>>>>",
-          existingProposal
-        );
+
         if (!existingProposal) {
           return response
             .response({ status: "err", err: "Applied proposal not found!" })
@@ -766,10 +705,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/proposal/${request.params.jobId} 
-          request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // Check whether account is expert
         const account = await Account.findOne({
@@ -827,8 +762,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/proposal/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -855,7 +788,6 @@ export let proposalRoute = [
               .code(404);
           }
         } else {
-          console.log("account.id ------------------", account.id);
           proposal = await Job.aggregate([
             { $unwind: "$proposals" },
             {
@@ -923,29 +855,19 @@ export let proposalRoute = [
     handler: async (request: Request, h) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/proposal/download/${request.params.fileId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         const bucketdb = mongoose.connection.db;
         const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
           bucketName: "file",
         });
 
-        // const downloadfile = bucket
-        // .openDownloadStream(new ObjectId(`${request.params.fileId}`))
-        // .pipe(fs.createWriteStream("Contract Project Lead.docx"));
-        // const cursor = bucket.find({_id: new ObjectId(`${request.params.fileId}`)});
-        // for await (const docs of cursor) {
-        //   console.log(docs);
-        // }
+  
         const ObjectId = mongoose.Types.ObjectId;
         let mime = require("mime-types");
-        console.log("mime------------->>>>>>>>>>>>>>", "mime");
         let file = bucket.find({ _id: new ObjectId(request.params.fileId) });
         let filename;
         let contentType;
         for await (const docs of file) {
-          console.log(docs);
           filename = docs.filename;
           contentType = mime.contentType(docs.filename);
         }
@@ -974,8 +896,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/proposal/download/${request.params.fileId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         // Check whether account is mentor
         const account = await Account.findOne({
@@ -991,10 +911,7 @@ export let proposalRoute = [
           {
             $and: [
               { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
+
             ],
           },
           {
@@ -1057,8 +974,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`PUT api/v1/proposal/${request.params.jobId}/decline/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         // Check whether account is mentor
         const account = await Account.findOne({
@@ -1140,8 +1055,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/proposal/download/${request.params.fileId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         // Check whether account is mentor
         const account = await Account.findOne({
@@ -1223,8 +1136,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`PUT api/v1/proposal/${request.params.jobId}/offer/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         // Check whether account is client
         const account = await Account.findOne({
@@ -1285,8 +1196,6 @@ export let proposalRoute = [
           },
         ]);
 
-        // console.log("findedProposal------------>", findedProposal[0].proposals);
-
         await Expert.findOneAndUpdate(
           {
             account: findedProposal[0].proposals.expert.id,
@@ -1297,8 +1206,6 @@ export let proposalRoute = [
             },
           }
         );
-
-        console.log("here------------------------>");
 
         const approvedProposal = await Job.aggregate([
           {
@@ -1341,8 +1248,6 @@ export let proposalRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`PUT api/v1/proposal/${request.params.jobId}/hire/${request.params.proposalId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         // Check whether account is expert
         const account = await Account.findOne({
@@ -1404,7 +1309,6 @@ export let proposalRoute = [
           },
         ]);
 
-        // console.log("findedProposal------------>", findedProposal[0].proposals);
 
         await Expert.findOneAndUpdate(
           {
@@ -1416,8 +1320,6 @@ export let proposalRoute = [
             },
           }
         );
-
-        console.log("here------------------------>");
 
         const approvedProposal = await Job.aggregate([
           {

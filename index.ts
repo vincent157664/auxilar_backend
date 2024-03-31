@@ -69,7 +69,6 @@ const init = async () => {
   await server.start();
 
   await registerSocketServer(server.listener);
-  console.log(path);
   let fileName = path + "/static";
   if (!fs.existsSync(fileName)) {
     fs.mkdirSync(fileName);

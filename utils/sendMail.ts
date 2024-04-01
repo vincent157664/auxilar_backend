@@ -7,7 +7,7 @@ const sendMail = async (to: String, content) => {
     secure: false, // true for 465, false for other ports
     auth: {
       user: "auxilarteam@gmail.com",
-      pass: "Qwe123!@#",
+      pass: "Servertester@157664",
     },
   });
 

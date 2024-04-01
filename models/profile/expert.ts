@@ -153,7 +153,7 @@ const ExpertSchema = new Schema({
     type: Array,
     required: false,
   },
-  certiification: {
+  certification: {
     type: Array,
     required: false,
   },

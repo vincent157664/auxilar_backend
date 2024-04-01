@@ -37,11 +37,6 @@ export let availableTimeRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `POST api/v1/schedule request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether schedule already exist.
         const isAlreadyExist = await AvailableTime.findOne({
           email: request.auth.credentials.email,
@@ -87,11 +82,6 @@ export let availableTimeRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `GET api/v1/schedule request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether schedul already exist.
         const schedule = await AvailableTime.findOne({
           email: request.auth.credentials.email,
@@ -122,10 +112,6 @@ export let availableTimeRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `GET api/v1/schedule/${request.params.contactorId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         const contactorAccount = await Account.findById(
           request.params.contactorId
@@ -177,10 +163,6 @@ export let availableTimeRoute = [
       try {
         const currentDate = new Date().toUTCString();
 
-        console.log(
-          `PUT api/v1/schedule request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         const data = request.payload;
         const scheduleDataField = {
           email: request.auth.credentials.email,
@@ -230,10 +212,6 @@ export let availableTimeRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `DELETE api/v1/schedule request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         const deleteSchedule = await AvailableTime.deleteOne({
           email: request.auth.credentials.email,

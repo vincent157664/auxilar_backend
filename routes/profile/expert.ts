@@ -47,7 +47,6 @@ export let expertRoute = [
   {
     method: "POST",
     path: "/",
-    // config: {
     options: {
       auth: "jwt",
       description: "Create  expert profile",
@@ -66,9 +65,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `POST api/v1/expert request from ${request.auth.credentials.email}`
-        );
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -78,10 +74,8 @@ export let expertRoute = [
             .response({ status: "err", err: "Not allowed expert profile!" })
             .code(403);
         }
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const expertField = {
           account: account.id,
@@ -103,16 +97,8 @@ export let expertRoute = [
           profile_links: data["profile_links"],
           linkedin: data["linkedin"],
           education: data["education"],
+          certification: data["certification"],
         };
-
-        // data["state"] ? (expertField["state"] = data["state"]) : null;
-        // data["city"] ? (expertField["city"] = data["city"]) : null;
-
-        // const expert = await Expert.findOneAndUpdate(
-        //   { account: account.id },
-        //   { $set: expertField },
-        //   { new: true, upsert: true, setDefaultsOnInsert: true }
-        // );
 
         const expertExist = await Expert.findOne({
           account: request.auth.credentials.accountId,
@@ -131,8 +117,6 @@ export let expertRoute = [
           "last_name",
           "email",
         ]);
-        console.log(`response data : ${responseData}`);
-
         return response
           .response({ status: "ok", data: "Profile created successfully" })
           .code(201);
@@ -152,22 +136,14 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/expert/ request from ${request.auth.credentials.email}`
-        );
         const expert = await Expert.findOne({
           account: request.auth.credentials.accountId,
         });
         if (!expert) {
-          console.log("Profile not found!");
           return response
             .response({ status: "err", err: "Profile not found!" })
             .code(404);
         }
-
-        // const responseData = await expert
-        // .populate("account", ["first_name", "last_name", "email"])
-        // .select("-ongoing_project");
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
@@ -175,9 +151,6 @@ export let expertRoute = [
           .populate("account", ["first_name", "last_name"])
           .select("-ongoing_project");
 
-        // const responseData = expert;
-        console.log("request success");
-        console.log(`response data : ${responseData}`);
         return response
           .response({ status: "ok", data: responseData })
           .code(200);
@@ -208,16 +181,11 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/person-info request from ${request.auth.credentials.email}`
-        );
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const expert = await Expert.findOneAndUpdate(
           { account: account.id },
@@ -228,25 +196,10 @@ export let expertRoute = [
             },
           }
         );
-        // await expert.save();
-
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .populate("account", ["first_name", "last_name", "email"])
-        //   .select("-ongoing_project");
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         }).select("avatar hourly_rate");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -280,16 +233,11 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/summary request from ${request.auth.credentials.email}`
-        );
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const expert = await Expert.findOneAndUpdate(
           { account: account.id },
@@ -299,25 +247,12 @@ export let expertRoute = [
             },
           }
         );
-        // await expert.save();
-
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         })
           .populate("account", ["first_name", "last_name", "email"])
           .select("-ongoing_project");
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // }).select("summary");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -351,16 +286,11 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/portfolio request from ${request.auth.credentials.email}`
-        );
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const expert = await Expert.findOneAndUpdate(
           { account: account.id },
@@ -371,26 +301,11 @@ export let expertRoute = [
           }
         );
 
-        // await expert.save();
-
-        console.log("expert--------------", expert);
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
-
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         })
           .populate("account", ["first_name", "last_name", "email"])
           .select("-ongoing_project");
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // }).select("portfolios");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -425,27 +340,11 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/portfolio/${request.params.portfolio_id} from ${request.auth.credentials.email}`
-        );
-
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-
-        console.log("data ----------------->", data);
-        console.log(`portfolio_id : ${request.params.portfolio_id}`);
-
-        // const portfolioItem = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .select("portfolios");
-        // .findOne({
-        //    "portfolios._id": request.params.portfolio_id
-        // });
 
         await Expert.findOneAndUpdate(
           {
@@ -466,18 +365,7 @@ export let expertRoute = [
           console.log("Updated data", res);
         });
 
-        // .findOne({ "portfolios._id": request.params.portfolio_id });
-
-        // const result = portfolioItem.portfolios.map((item) => String(item._id) === String(request.params.portfolio_id));
-
-        // console.log('--->>>>', result);
-        // console.log(portfolioItem);
-
-        // await portfolioItem.save();
-
         const responseData = await Expert.findOne({ account: account.id });
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -501,54 +389,21 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `DELETE api/v1/expert/portfolio/${request.params.portfolio_id} from ${request.auth.credentials.email}`
-        );
-
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-
-        console.log("data ----------------->", data);
-        console.log(`portfolio_id : ${request.params.portfolio_id}`);
-
-        // const portfolioItem = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .select("portfolios");
-        // .findOne({
-        //    "portfolios._id": request.params.portfolio_id
-        // });
 
         await Expert.findOneAndUpdate(
           {
             account: account.id,
           },
-          // {
-          //   $unset: {
-          //     "portfolios.$._id": request.params.portfolio_id,
-          //   },
-          // }
           { $pull: { portfolios: { _id: request.params.portfolio_id } } }
         ).then((res) => {
-          console.log("Updated data", res);
         });
 
-        // .findOne({ "portfolios._id": request.params.portfolio_id });
-
-        // const result = portfolioItem.portfolios.map((item) => String(item._id) === String(request.params.portfolio_id));
-
-        // console.log('--->>>>', result);
-        // console.log(portfolioItem);
-
-        // await portfolioItem.save();
-
         const responseData = await Expert.findOne({ account: account.id });
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -583,26 +438,13 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/portfolio/additem from ${request.auth.credentials.email}`
-        );
 
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
 
-        console.log("data ----------------->", data);
-
-        // const portfolioItem = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .select("portfolios");
-        // .findOne({
-        //    "portfolios._id": request.params.portfolio_id
-        // });
 
         await Expert.updateOne(
           {
@@ -624,18 +466,7 @@ export let expertRoute = [
           console.log("Updated data", res);
         });
 
-        // .findOne({ "portfolios._id": request.params.portfolio_id });
-
-        // const result = portfolioItem.portfolios.map((item) => String(item._id) === String(request.params.portfolio_id));
-
-        // console.log('--->>>>', result);
-        // console.log(portfolioItem);
-
-        // await portfolioItem.save();
-
         const responseData = await Expert.findOne({ account: account.id });
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -669,17 +500,12 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/verifier request from ${request.auth.credentials.email}`
-        );
+    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
-
         const expert = await Expert.findOneAndUpdate(
           { account: account.id },
           {
@@ -689,25 +515,9 @@ export let expertRoute = [
           }
         );
 
-        // await expert.save();
-
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .populate("account", ["first_name", "last_name", "email"])
-        //   .select("-ongoing_project");
-
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         }).select("verified_by");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -741,16 +551,12 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/resume request from ${request.auth.credentials.email}`
-        );
+       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const expert = await Expert.findOneAndUpdate(
           { account: account.id },
@@ -761,25 +567,11 @@ export let expertRoute = [
           }
         );
 
-        // await expert.save();
-
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // })
-        //   .populate("account", ["first_name", "last_name", "email"])
-        //   .select("-ongoing_project");
+       
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         }).select("resume");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -813,16 +605,12 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/person-detail request from ${request.auth.credentials.email}`
-        );
+    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           address: data["address"],
@@ -855,27 +643,13 @@ export let expertRoute = [
         //   ? (expert["city"] = data["city"])
         //   : (expert["city"] = null);
 
-        // await expert.save();
-
-        // const responseData = await expert.populate("account", [
-        //   "first_name",
-        //   "last_name",
-        //   "email",
-        // ]);
+      
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
         })
           .populate("account", ["first_name", "last_name", "email"])
           .select("-ongoing_project");
-
-        // const responseData = await Expert.findOne({
-        //   account: request.auth.credentials.accountId,
-        // }).select(
-        //   "address post_number languages skills majors reviews active_status profile_links linkedin"
-        // );
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -909,17 +683,12 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/expert/education request from ${request.auth.credentials.email}`
-        );
+    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
-
         const updateData = {
           education: data["education"],
         };
@@ -936,8 +705,6 @@ export let expertRoute = [
         })
           .populate("account", ["first_name", "last_name", "email"])
           .select("-ongoing_project");
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -960,13 +727,10 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `DELETE api/v1/expert request from ${request.auth.credentials.email}`
-        );
+    
         const deleteStatus = await Expert.deleteOne({
           account: request.auth.credentials.accountId,
         });
-        console.log("delete result ----------->", deleteStatus);
         if (deleteStatus.deletedCount)
           return response
             .response({ status: "ok", data: "Successfuly deleted!" })
@@ -1003,9 +767,6 @@ export let expertRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/expert/findExperts request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether account is client
         const account = await Account.findOne({
@@ -1021,12 +782,7 @@ export let expertRoute = [
         const queryAll = {};
         if (data["skills"].length) queryAll["skills"] = { $in: data["skills"] };
         if (data["majors"].length) queryAll["majors"] = { $in: data["majors"] };
-        console.log(
-          "queryAll------------------->>>>>>>>>>>>>>>>",
-          data["majors"]
-        );
-        if (data["email"]) queryAll["email"] = data["email"];
-        console.log("queryAll------------------->>>>>>>>>>>>>>>>", queryAll);
+               if (data["email"]) queryAll["email"] = data["email"];
 
         const findExperts = await Expert.aggregate([
           {
@@ -1070,9 +826,7 @@ export let expertRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/expert/all-skills request from ${request.auth.credentials.email}`
-        );
+    
         const allSkills = await Skill.find();
         if (!allSkills) {
           return response
@@ -1098,9 +852,7 @@ export let expertRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/expert/all-majors request from ${request.auth.credentials.email}`
-        );
+
         const allMajors = await Major.find();
         if (!allMajors) {
           return response

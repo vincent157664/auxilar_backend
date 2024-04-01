@@ -40,10 +40,6 @@ export let contractRoute = [
       try {
         const currentDate = new Date().toUTCString();
 
-        console.log(
-          `POST api/v1/contract request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check wheter account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -84,7 +80,6 @@ export let contractRoute = [
           expert_id: data["expert_id"],
         });
 
-        console.log("contract----------------------->", contract);
         if (contract) {
           return response
             .response({ stauts: "err", err: "Contract already exist!" })
@@ -141,10 +136,6 @@ export let contractRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `GET api/v1/contract/${request.params.jobId}/${request.params.proposalId}/${request.params.expertId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check wheter account is client
         const account = await Account.findOne({
@@ -204,10 +195,6 @@ export let contractRoute = [
       try {
         const currentDate = new Date().toUTCString();
 
-        console.log(
-          `GET api/v1/contract/all request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check wheter account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -260,10 +247,6 @@ export let contractRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `PUT api/v1/contract request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check wheter account is client
         const account = await Account.findOne({
@@ -340,10 +323,6 @@ export let contractRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
-        console.log(
-          `GET api/v1/contract request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check wheter account is client
         const account = await Account.findOne({

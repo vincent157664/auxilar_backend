@@ -6,23 +6,19 @@ const sendMail = async (to: String, content) => {
     port: 587,
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "auxilarteam@gmail.com",
-      pass: "Servertester@157664",
+      user: "georgebollin99@gmail.com",
+      pass: "mmusszvmvgtjsusx",
     },
   });
 
   // Use the transporter to send emails
   try {
     const res = await transporter.sendMail({
-      from: "auxilarteam@gmail.com",
+      from: "georgebollin99@gmail.com",
       to,
-      subject: "Hello",
+      subject: "Email Verification",
       html: content,
     });
-    console.log(res);
-  } catch (error) {
-    console.log(error);
-  }
+  } catch (error) {}
 };
-
 export default sendMail;

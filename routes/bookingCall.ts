@@ -45,31 +45,11 @@ export let bookingCallRoute = [
       description: "Create a BookingCall",
       plugins: createBookingCallSwagger,
       tags: ["api", "bookingCall"],
-      // validate: {
-      //   payload: createBookingSchema,
-      //   options,
-      //   failAction: (request, h, error) => {
-      //     const details = error.details.map((d) => {
-      //       return { err: d.message };
-      //     });
-      //     return h.response(details).code(400).takeover();
-      //   },
-      // },
+ 
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        // const currentDate = new Date().toUTCString();
-
-        // console.log(
-        //   `POST api/v1/book request from ${request.auth.credentials.email} Time: ${currentDate}`
-        // );
-
-        // const data = request.payload;
-
-        // Get account info
-        // const account = await Account.findOne({
-        //   email: request.auth.credentials.email,
-        // });
+   
 
         const externalMeetingId = request.params.room_name;
         const clientRequestToken = uuidv4();
@@ -82,32 +62,7 @@ export let bookingCallRoute = [
           MediaRegion: process.env.AWS_REGION, // required
           // MeetingHostId: "STRING_VALUE",
           ExternalMeetingId: externalMeetingId, // required
-          // MeetingFeatures: {
-          //   // MeetingFeaturesConfiguration
-          //   Audio: {
-          //     // AudioFeatures
-          //     EchoReduction: "AVAILABLE",
-          //   },
-          //   Video: {
-          //     // VideoFeatures
-          //     MaxResolution: "FHD",
-          //   },
-          //   Content: {
-          //     // ContentFeatures
-          //     MaxResolution: "UHD",
-          //   },
-          //   Attendee: {
-          //     // AttendeeFeatures
-          //     MaxCount: 2,
-          //     // MaxCount: Number("int"),
-          //   },
-          // },
-          // NotificationsConfiguration: {
-          //   // NotificationsConfiguration
-          //   LambdaFunctionArn: "STRING_VALUE",
-          //   SnsTopicArn: "STRING_VALUE",
-          //   SqsQueueArn: "STRING_VALUE",
-          // },
+         
           Attendees: [
             // CreateMeetingWithAttendeesRequestItemList // required
             {
@@ -119,47 +74,14 @@ export let bookingCallRoute = [
               ExternalUserId: externalUseId2, // required
             },
           ],
-          // PrimaryMeetingId: "STRING_VALUE",
-          // TenantIds: [
-          //   // TenantIdList
-          //   "STRING_VALUE",
-          // ],
-          // Tags: [
-          //   // TagList
-          //   {
-          //     // Tag
-          //     Key: "STRING_VALUE", // required
-          //     Value: "STRING_VALUE", // required
-          //   },
-          // ],
+ 
         };
 
         const createMeetingCommand = new CreateMeetingWithAttendeesCommand(
           createMeetingInput
         );
-        // console.log("command---------------------------->", command);
+
         const chimeResponse = await client.send(createMeetingCommand);
-
-        // console.log("chimeResponse--------------------->", chimeResponse);
-
-        // const bookingCallData = {
-        //   owner: {
-        //     id: account._id,
-        //     first_name: account.first_name,
-        //     last_name: account.last_name,
-        //   },
-        //   participants: data["participants"],
-        //   call_link: data["call_link"],
-        //   title: data["title"],
-        //   description: data["description"] ?? null,
-        //   meeting_date: data["meeting_date"],
-        //   meeting_time: data["meeting_time"],
-        //   status: data["status"],
-        // };
-
-        // const bookingCall = new BookingCall(bookingCallData);
-        // await bookingCall.save();
-        console.log("chimeResponse------------->", chimeResponse);
         return response
           .response({
             status: "ok",
@@ -182,33 +104,11 @@ export let bookingCallRoute = [
       description: "Get a booked call",
       plugins: createBookingCallSwagger,
       tags: ["api", "bookingCall"],
-      // validate: {
-      //   payload: createBookingSchema,
-      //   options,
-      //   failAction: (request, h, error) => {
-      //     const details = error.details.map((d) => {
-      //       return { err: d.message };
-      //     });
-      //     return h.response(details).code(400).takeover();
-      //   },
-      // },
+
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        // const currentDate = new Date().toUTCString();
-
-        // console.log(
-        //   `POST api/v1/book request from ${request.auth.credentials.email} Time: ${currentDate}`
-        // );
-
-        // const data = request.payload;
-
-        // Get account info
-        // const account = await Account.findOne({
-        //   email: request.auth.credentials.email,
-        // });
-
-        const meetingId = request.params.room_name;
+          const meetingId = request.params.room_name;
         const clientRequestToken = uuidv4();
         const externalUseId1 = uuidv4();
         const externalUseId2 = uuidv4();
@@ -225,29 +125,6 @@ export let bookingCallRoute = [
           getChimeMeetingAttendeescommand
         );
 
-        // console.log("chimeResponse--------------------->", chimeResponse);
-
-        // const bookingCallData = {
-        //   owner: {
-        //     id: account._id,
-        //     first_name: account.first_name,
-        //     last_name: account.last_name,
-        //   },
-        //   participants: data["participants"],
-        //   call_link: data["call_link"],
-        //   title: data["title"],
-        //   description: data["description"] ?? null,
-        //   meeting_date: data["meeting_date"],
-        //   meeting_time: data["meeting_time"],
-        //   status: data["status"],
-        // };
-
-        // const bookingCall = new BookingCall(bookingCallData);
-        // await bookingCall.save();
-        console.log(
-          "responseChimeMeeting--------------->",
-          responseChimeMeeting
-        );
         return response
           .response({
             status: "ok",
@@ -274,10 +151,6 @@ export let bookingCallRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/book request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // Get account id
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -314,10 +187,6 @@ export let bookingCallRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/book/${request.params.contactorId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // Get account id
         const contactorAccount = await Account.findById(
           request.params.contactorId
@@ -360,9 +229,6 @@ export let bookingCallRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/book${request.params.bookingCallId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // Get account id
         const account = await Account.findOne({
@@ -417,9 +283,6 @@ export let bookingCallRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/book/${request.params.bookingCallId} request form ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // Get account info
         const account = await Account.findOne({
@@ -488,10 +351,6 @@ export let bookingCallRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currendDate = new Date().toUTCString();
-
-        console.log(
-          `DELETE api/v1/book/${request.params.bookingCallId} from ${request.auth.credentials.email} Time: ${currendDate}`
-        );
 
         // GET account info
         const account = await Account.findOne({

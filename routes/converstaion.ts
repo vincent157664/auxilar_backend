@@ -47,9 +47,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/conversation/ request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check account
         const account = await Account.findOne({
@@ -129,7 +126,6 @@ export let conversationRoute = [
           const mentor_profile = await Mentor.findOne({ account: account._id });
           const expert_profile = await Expert.findOne({ account: expert._id });
 
-          console.log("here-------------------->>>>>>>>>>");
           // fill conversationField
           conversationField = {
             expert_id: data["expert_id"],
@@ -165,10 +161,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/conversation/all request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether account is Admin
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -246,7 +238,6 @@ export let conversationRoute = [
             },
           ]);
         } else if (account.account_type === "client") {
-          console.log("client id------------------------->", account);
           // get all conversations associated with current client.
           allConversations = await Conversation.aggregate([
             {
@@ -492,10 +483,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/my/${request.params.contactId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether acount exist
         const myAccount = await Account.findOne({
           email: request.auth.credentials.email,
@@ -566,7 +553,6 @@ export let conversationRoute = [
         if (expert_id) queryAll["$and"].push({ expert_id });
         if (mentor_id) queryAll["$and"].push({ mentor_id });
 
-        console.log("queryAll---------------->>>>>>>>>", queryAll);
 
         const myConversation = await Conversation.aggregate([
           {
@@ -664,9 +650,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `DELETE api/v1/my/${request.params.contactId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether acount exist
         const myAccount = await Account.findOne({
@@ -738,7 +721,6 @@ export let conversationRoute = [
         if (expert_id) queryAll["$and"].push({ expert_id });
         if (mentor_id) queryAll["$and"].push({ mentor_id });
 
-        console.log("queryAll---------------->>>>>>>>>", queryAll);
 
         // find conversation
         const myConversation = await Conversation.aggregate([
@@ -766,7 +748,6 @@ export let conversationRoute = [
 
         // delete conversation
         myConversation.forEach(async (item) => {
-          console.log("item------------------>>>>>>>>>>>", item);
           await Conversation.deleteOne({
             client_id: item.client_id,
             expert_id: item.expert_id,
@@ -774,7 +755,6 @@ export let conversationRoute = [
           });
         });
 
-        console.log("myConversation---------------->", "myConversation");
         return response
           .response({ status: "ok", data: myConversation })
           .code(200);
@@ -815,9 +795,6 @@ export let conversationRoute = [
       handler: async (request: Request, response: ResponseToolkit) => {
         try {
           const currentDate = new Date();
-          console.log(
-            `PATCH api/v1/my/messages request from ${request.auth.credentials.email} Time: ${currentDate}`
-          );
 
           const data = request.payload;
 
@@ -931,7 +908,6 @@ export let conversationRoute = [
           // add attached files if it exist
           if (data["attached_files"]) {
             // push a message to the conversation
-            console.log("queryAll---------------->>>>>>>>>", queryAll);
 
             myConversation = await Conversation.findOneAndUpdate(
               queryAll,
@@ -1047,9 +1023,6 @@ export let conversationRoute = [
       handler: async (request: Request, response: ResponseToolkit) => {
         try {
           const currentDate = new Date();
-          console.log(
-            `PATCH api/v1/my/messages request from ${request.auth.credentials.email} Time: ${currentDate}`
-          );
 
           const data = request.payload;
 
@@ -1147,11 +1120,6 @@ export let conversationRoute = [
               "messages.$": 1,
             });
 
-            console.log(
-              "sendedMessage-------------->>>>>>>>>>>>",
-              sendedMessage
-            );
-
             const attached_files = sendedMessage.messages[0]["attached_files"];
 
             // delete uploaded files
@@ -1192,15 +1160,9 @@ export let conversationRoute = [
             messageField["message_body"] =
               data["messageData"]["parent_message_id"];
 
-          console.log(
-            "data[attached_files]--------------------->>>>>>>>>>",
-            data["attached_files"]
-          );
-
           // add attached files if it exist
           if (data["attached_files"]) {
             // Update message in the conversation
-            console.log("queryAll---------------->>>>>>>>>", queryAll);
 
             myConversation = await Conversation.findOneAndUpdate(
               queryAll,
@@ -1318,8 +1280,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/conversation/my/message/${request.params.contactId}/${request.params.messageId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
         const data = request.payload;
 
         // check whether acount exist
@@ -1430,8 +1390,6 @@ export let conversationRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`DELETE api/v1/conversation/my/message/${request.params.contactId}/${request.params.messageId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
         const data = request.payload;
 
         // check whether acount exist
@@ -1512,7 +1470,6 @@ export let conversationRoute = [
         let myMessage;
 
         try {
-          console.log("here------------------------>>>>>>>>");
           // Get my message in conversation
           myMessage = await Conversation.findOneAndUpdate(
             queryAll,
@@ -1551,29 +1508,18 @@ export let conversationRoute = [
     handler: async (request: Request, h) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(`GET api/v1/conversation/download/${request.params.fileId} from 
-        ${request.auth.credentials.email} Time: ${currentDate}`);
 
         const bucketdb = mongoose.connection.db;
         const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
           bucketName: "messageFiles",
         });
 
-        // const downloadfile = bucket
-        // .openDownloadStream(new ObjectId(`${request.params.fileId}`))
-        // .pipe(fs.createWriteStream("Contract Project Lead.docx"));
-        // const cursor = bucket.find({_id: new ObjectId(`${request.params.fileId}`)});
-        // for await (const docs of cursor) {
-        //   console.log(docs);
-        // }
         const ObjectId = mongoose.Types.ObjectId;
         let mime = require("mime-types");
-        console.log("mime------------->>>>>>>>>>>>>>", "mime");
         let file = bucket.find({ _id: new ObjectId(request.params.fileId) });
         let filename;
         let contentType;
         for await (const docs of file) {
-          console.log(docs);
           filename = docs.filename;
           contentType = mime.contentType(docs.filename);
         }

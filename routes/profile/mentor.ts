@@ -46,9 +46,7 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `POST api/v1/mentor request from ${request.auth.credentials.email}`
-        );
+      
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -59,11 +57,8 @@ export let mentorRoute = [
             .response({ status: "err", err: "Not allowed" })
             .code(403);
         }
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------------------", data);
-
         let birthday: Date = new Date("<yyyy-mm-dd>");
         birthday = data["birthday"];
 
@@ -108,7 +103,6 @@ export let mentorRoute = [
           "last_name",
           "email",
         ]);
-        console.log(`response data: ${responseData}`);
 
         // return response.response({ status: 'ok', data: 'Profile created successfully' }).code(201);
         return response
@@ -131,14 +125,11 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/mentor/ request from ${request.auth.credentials.email}`
-        );
+     
         const mentor = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         });
         if (!mentor) {
-          console.log("Profile not found!");
           return response
             .response({ status: "err", err: "Profile not found!" })
             .code(404);
@@ -147,8 +138,6 @@ export let mentorRoute = [
           "first_name",
           "last_name",
         ]);
-        console.log("request success");
-        console.log(`response data : ${responseData}`);
         return response
           .response({ status: "ok", data: responseData })
           .code(200);
@@ -179,17 +168,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/summary request from ${request.auth.credentials.email}`
-        );
+  
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
-
         const mentor = await Mentor.findOneAndUpdate(
           { account: account.id },
           {
@@ -203,7 +187,6 @@ export let mentorRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -237,16 +220,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/avatar request from ${request.auth.credentials.email}`
-        );
+       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const mentor = await Mentor.findOneAndUpdate(
           { account: account.id },
@@ -261,7 +240,6 @@ export let mentorRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -295,16 +273,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/peronal-info request from ${request.auth.credentials.email}`
-        );
+       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           country: data["country"],
@@ -324,8 +298,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -359,17 +331,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/social-media request from ${request.auth.credentials.email}`
-        );
+ 
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
-
         const updateData = {
           social_media: data["social_media"],
         };
@@ -385,7 +352,6 @@ export let mentorRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -419,16 +385,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/social-media request from ${request.auth.credentials.email}`
-        );
+        
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           payment_info: data["payment_info"],
@@ -444,8 +406,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -479,16 +439,12 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `PUT api/v1/mentor/social-media request from ${request.auth.credentials.email}`
-        );
+        
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(account);
 
         const data = request.payload;
-        console.log("data---------------", data);
 
         const updateData = {
           professional_info: data["professional_info"],
@@ -505,7 +461,6 @@ export let mentorRoute = [
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
 
-        console.log(`response data : ${responseData}`);
 
         return response.response({
           status: "ok",
@@ -529,13 +484,10 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `DELETE api/v1/mentor request from ${request.auth.credentials.email}`
-        );
+        
         const deleteStatus = await Mentor.deleteOne({
           account: request.auth.credentials.accountId,
         });
-        console.log("delete result ----------->", deleteStatus);
         if (deleteStatus.deletedCount)
           return response
             .response({ status: "ok", data: "Successfuly deleted!" })

@@ -59,11 +59,7 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PATCH api/v1/admin/update/${request.params.account_email} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
-        // check wether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
         });
@@ -78,10 +74,7 @@ export let adminRoute = [
         // check whether account exist, update status
         try {
           const data = request.payload;
-          console.log(
-            "account_email-------------->>>>>>",
-            request.params.account_email
-          );
+     
 
           const account = await Account.findOneAndUpdate(
             { email: request.params.account_email },
@@ -117,19 +110,12 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/ from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
+
 
         const accounts_per_page: number = Number(
           request.params.accounts_per_page
         );
         const page_index: number = Number(request.params.page_index);
-        console.log(
-          "account_per_page --------------->>>>>>>",
-          typeof accounts_per_page
-        );
-        console.log("page_index --------------->>>>>>>", typeof page_index);
         // check wether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -143,7 +129,6 @@ export let adminRoute = [
         }
 
         const totalCount = await Account.find({}).count();
-        console.log("totalCount--------------->>>>>>>>>>", totalCount);
 
         const accountinfo = await Account.aggregate([
           {
@@ -183,10 +168,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `DELETE api/v1/admin/${request.params.account_email} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check wether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -243,10 +224,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/admin/skills/add from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -307,10 +284,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/admin/skills/update/${request.params.skillId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -371,9 +344,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `DELETE api/v1/admin/skills/delete/${request.params.skillId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether admin exist
         const admin = await Account.findOne({
@@ -423,9 +393,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/skills/all from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether admin exist
         const admin = await Account.findOne({
@@ -469,9 +436,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/skills/${request.params.skillId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether admin exist
         const admin = await Account.findOne({
@@ -528,10 +492,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/admin/majors/add from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -592,10 +552,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/admin/majors/update/${request.params.majorId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -656,10 +612,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `DELETE api/v1/admin/majors/delete/${request.params.majorId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -707,10 +659,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/majors/all from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -753,10 +701,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/majors/${request.params.majorId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -812,10 +756,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/admin/categories/add from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -876,10 +816,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/admin/categories/update/${request.params.categoryId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -940,10 +876,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `DELETE api/v1/admin/categories/delete/${request.params.categoryId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -991,10 +923,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/categories/all from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,
@@ -1037,10 +965,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/admin/categories/${request.params.categoryId} from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
         // check whether admin exist
         const admin = await Account.findOne({
           email: request.auth.credentials.email,

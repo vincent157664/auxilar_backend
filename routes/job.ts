@@ -50,9 +50,6 @@ export let jobRoute = [
       try {
         const currentDate = new Date().toUTCString();
 
-        console.log(
-          `POST api/v1/job request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
         // check whether account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -105,13 +102,9 @@ export let jobRoute = [
 
         const newJob = new Job(
           jobField
-          // { client_email: account.email },
-          // { $set: jobField },
-          // { new: true, upsert: true, setDefaultsOnInsert: true }
         );
 
         await newJob.save();
-        console.log("job posted successfully!", newJob);
 
         // add posted job to client
         await Client.findOneAndUpdate(
@@ -153,9 +146,7 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PUT api/v1/job/${request.params.jobId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
+
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         });
@@ -204,7 +195,6 @@ export let jobRoute = [
         );
 
         // await job.save();
-        console.log("job updated successfully!", job);
 
         return response
           .response({ status: "ok", data: "Job updated successfully" })
@@ -227,9 +217,6 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/job request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether account is expert
         const account = await Account.findOne({
@@ -268,9 +255,7 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/job/myjob request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
+
         // Check whether account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -356,9 +341,7 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/job/${request.params.jobId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
+
         try {
           const job = await Job.find({
             _id: request.params.jobId,
@@ -387,9 +370,6 @@ export let jobRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `DELETE api/v1/job/${request.params.jobId} request from ${request.auth.credentials.email}`
-        );
         // Check account whether it's client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -457,9 +437,6 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/job/findjobs request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // Check whether account is expert
         const account = await Account.findOne({
@@ -509,11 +486,6 @@ export let jobRoute = [
             })
           : null;
 
-        console.log(
-          "query_skillandtitle---------------------->>>>>>>>>>>>>>",
-          query_skillandtitle
-        );
-
         // ----------------------------- query for budget type is hourly ---------------------------
 
         let query_hourly_budget = {};
@@ -533,14 +505,6 @@ export let jobRoute = [
             });
           });
         }
-        console.log(
-          "query_hourly_budget-------------------->>>>>>>>>>>>>",
-          query_hourly_budget
-        );
-        console.log(
-          "query_hourly-------------------->>>>>>>>>>>>>",
-          query_hourly
-        );
 
         // ------------------------------- query for budget type is fixed --------------------------
         let query_fixed_budget = {};
@@ -562,15 +526,6 @@ export let jobRoute = [
           });
         }
 
-        console.log(
-          "query_fixed_budget-------------------->>>>>>>>>>>>>",
-          query_fixed_budget
-        );
-        console.log(
-          "query_fixed-------------------->>>>>>>>>>>>>",
-          query_fixed
-        );
-
         const query_number_of_proposals = [];
         if (data["number_of_proposals"].length !== 0) {
           data["number_of_proposals"].forEach((item) => {
@@ -584,10 +539,6 @@ export let jobRoute = [
             });
           });
         }
-        console.log(
-          "query_number_of_proposals-------------------->>>>>>>>>>>>>",
-          query_number_of_proposals
-        );
 
         const query_client_info = [];
         if (data["client_info"]?.["payment_verified"])
@@ -595,21 +546,12 @@ export let jobRoute = [
         if (data["client_info"]?.["payment_unverified"])
           query_client_info.push({ "clientData.payment_verify": false });
 
-        console.log(
-          "query_client_info ------------------>>>>>>>>>>>>>",
-          query_client_info
-        );
-
         const query_hours_per_week = [];
         if (data["hours_per_week"].length !== 0) {
           data["hours_per_week"].forEach((item) => {
             query_hours_per_week.push({ hours_per_week: item });
           });
         }
-        console.log(
-          "query_hours_per_week ------------------>>>>>>>>>>",
-          query_hours_per_week
-        );
 
         const query_project_duration = [];
         if (data["project_duration"].length !== 0) {
@@ -617,11 +559,6 @@ export let jobRoute = [
             query_project_duration.push({ project_duration: item });
           });
         }
-        console.log(
-          "query_project_duration ------------------>>>>>>>>>>",
-          query_project_duration
-        );
-
         data["jobs_per_page"]
           ? (filter["jobs_per_page"] = data["jobs_per_page"])
           : null;
@@ -631,28 +568,7 @@ export let jobRoute = [
         const queryAll = {
           $and: [
             query_skillandtitle,
-            // {
-            //   $or: [
-            // query_hourly_budget,
-            //     // {
-            //     // $and: [
-            //     // query_fixed_budget,
-            //     // {
-            //     //   $or: query_fixed,
-            //     // },
-            //     // ],
-            //     // },
-            //     {
-            //       $or: query_number_of_proposals,
-            //     },
-            //     {
-            //       $or: query_client_info,
-            //     },
-            //     {
-            //       $or: query_hours_per_week,
-            //     },
-            //   ],
-            // },
+          
           ],
         };
 
@@ -674,10 +590,7 @@ export let jobRoute = [
               queryAll.$and.push({ $or: [{ $and: [query_hourly_budget] }] });
             }
           }
-          console.log(
-            "queryAll.and[1]----------------------->>>>>>>>>>>",
-            queryAll.$and[1]["$or"][0]
-          );
+       
         }
 
         if (Object.keys(query_fixed_budget).length !== 0) {
@@ -698,10 +611,7 @@ export let jobRoute = [
               queryAll.$and.push({ $or: [{ $and: [query_fixed_budget] }] });
             }
           }
-          console.log(
-            "queryAll.and[1]----------------------->>>>>>>>>>>",
-            queryAll.$and[1]["$or"][0]
-          );
+
         }
 
         if (query_number_of_proposals.length !== 0) {
@@ -728,14 +638,6 @@ export let jobRoute = [
             : queryAll.$and.push({ $or: [{ $or: query_project_duration }] });
         }
 
-        console.log(
-          "queryAll-------------------------------->>>>>>>>>>",
-          queryAll
-        );
-        // console.log(
-        //   "query_client_info------------------->>>>>>>>>>>",
-        //   query_client_info
-        // );
         const findedjobs = await Job.aggregate([
           {
             $lookup: {
@@ -791,10 +693,6 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `PATCH api/v1/job/${request.params.jobId}/invite/${request.params.expertId} request from
-           ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether account is client
         const account = await Account.findOne({
@@ -828,7 +726,6 @@ export let jobRoute = [
             .code(409);
         }
 
-        console.log("expert------------------>>>>>>>>>>>>>>>>>>>", expert);
         let inviteExpertToJob;
         const data = request.payload;
 
@@ -880,9 +777,6 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `POST api/v1/job/${request.params.jobId}/recommendedExperts request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
 
         // check whether account is client
         const account = await Account.findOne({
@@ -905,7 +799,6 @@ export let jobRoute = [
 
         const queryAll = {};
         if (job.skill_set.length) queryAll["skills"] = { $in: job.skill_set };
-        console.log("queryAll------------------->>>>>>>>>>>>>>>>", queryAll);
 
         const findExperts = await Expert.aggregate([
           {
@@ -950,9 +843,6 @@ export let jobRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/job/all-categories request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
         const allCategories = await Category.find();
         if (!allCategories) {
           return response

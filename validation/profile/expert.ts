@@ -56,7 +56,10 @@ export const ProfileSchema = Joi.object({
 
   linkedin: Joi.string(),
 
-  education: Joi.object().required().messages({
+  education: Joi.array().optional().messages({
+    "any.required": "Please provide education",
+  }),
+  certification: Joi.array().optional().messages({
     "any.required": "Please provide education",
   }),
 });

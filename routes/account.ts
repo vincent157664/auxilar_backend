@@ -57,7 +57,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(`POST api/v1/account/register request from ...`);
         const email = request.payload["email"];
         const account = await Account.findOne({ email });
         if (account) {
@@ -105,8 +104,8 @@ export let accountRoute = [
           border:2px solid rgb(0,123,168);border-radius:100px;min-width:230px;color:rgba(255,255,255,1);
           white-space:nowrap;font-weight:normal;display:block;font-family:Helvetica,Arial,sans-serif;
           font-size:16px;line-height:40px;text-align:center;text-decoration:none"
-          href="http://3.88.116.42:3000/account/verify-email/${token}" target="_blank"
-          data-saferedirecturl="https://www.google.com/url?q="http://3.88.116.42:3000/account/verify-email/${token}">
+          href="http://195.201.56.175:3000/account/verify-email/${token}" target="_blank"
+          data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/verify-email/${token}">
           Verify Email</a></div></td></tr></tbody></table></td></tr><tr>
           <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
           padding-left:20px;padding-right:20px;padding-top:20px">
@@ -116,32 +115,6 @@ export let accountRoute = [
           padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
           Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
-        // const emailParams = {
-        //   Source: "galaxydragon0702@gmail.com",
-        //   Destination: {
-        //     ToAddresses: [newAccount.email],
-        //   },
-        //   Message: {
-        //     Subject: {
-        //       Data: "Verify Email",
-        //     },
-        //     Body: {
-        //       Html: {
-        //         Data: content,
-        //       },
-        //     },
-        //   },
-        // };
-
-        // ses.sendEmail(emailParams, (err, data) => {
-        //   if (err) {
-        //     console.log("Error sending email:", err);
-        //   } else {
-        //     console.log("Email sent successfully:", data);
-        //   }
-        // });
-
-        // sendMail(newAccount.email, content);
         sendMail(email, content);
         return response
           .response({
@@ -151,7 +124,6 @@ export let accountRoute = [
           .code(201);
         // linkUrl: `localhost:3000/verify-email/${token}`,
       } catch (error) {
-        console.log("===================================>>>>>>>>>>> ", error);
         return response.response({ status: "err", err: error }).code(500);
       }
     },
@@ -167,19 +139,9 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/account/verify-email/${request.params.token} request from ...`
-        );
 
-        // console.log(request.params.token);
-        // console.log(request.auth.credentials.accountId);
-        // const account = await Account.findById(request.auth.credentials.accountId);
         const decoded = Jwt.decode(request.params.token);
-        console.log(decoded);
-        // console.log(decoded);
-        // const account = await Account.findById(decoded.accountId);
         const account = new Account(decoded.newAccount);
-        // if (account) {
         account.verified_status = true;
         account.active = true;
         const currentDate = new Date().toUTCString();
@@ -200,14 +162,7 @@ export let accountRoute = [
             msg: "Verify Email Success",
           })
           .code(200);
-        // }
-        // return response
-        //   .response({
-        //     err: verifyEmailSwagger["hapi-swagger"].responses[400].description,
-        //   })
-        //   .code(400);
       } catch (error) {
-        console.log(error);
         return response.response({ err: error }).code(400);
       }
     },
@@ -237,9 +192,7 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `POST api/v1/account/signin request from ${request.payload["email"]}`
-        );
+    
 
         const email = request.payload["email"];
         const password = request.payload["password"];
@@ -271,7 +224,6 @@ export let accountRoute = [
 
         return response.response({ token }).code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ err: error }).code(500);
       }
     },
@@ -288,10 +240,7 @@ export let accountRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `GET api/v1/account/me request from ${request.auth.credentials.email}`
-        );
-        console.log(request.auth.credentials.email);
+    
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         }).select("-password");
@@ -305,7 +254,6 @@ export let accountRoute = [
           })
           .code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ err: error }).code(500);
       }
     },
@@ -335,17 +283,12 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(
-          `POST api/v1/account/change-password request from ${request.auth.credentials.email}`
-        );
+    
         const new_Password = request.payload["new_password"];
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        // if (!account) {
-        //   return response
-        //   .response({msg: 'Account not found'}).code(404);
-        // }
+    
         const hash = await bcrypt.hash(new_Password, 10);
         account.password = hash;
         await account.save();
@@ -353,7 +296,6 @@ export let accountRoute = [
           .response({ msg: "Successfuly changed password" })
           .code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ err: error }).code(500);
       }
     },
@@ -371,9 +313,7 @@ export let accountRoute = [
         failAction: (requeset, h, error) => {
           const details = error.details.map((d) => {
             return {
-              // message: d.message,
               err: d.message,
-              // path: d.path,
             };
           });
           return h.response(details).code(400).takeover();
@@ -382,7 +322,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(`POST api/v1/account/forgot-password request from ...`);
         const account = await Account.findOne({
           email: request.payload["email"],
         });
@@ -441,7 +380,7 @@ export let accountRoute = [
        font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
         width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
         <tr><td><div style="text-align:center;margin:0 auto">
-        data-saferedirecturl="https://www.google.com/url?q="http://3.88.116.42:3000/account/reset-password">
+        data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
         passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
         <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
         padding-left:20px;padding-right:20px;padding-top:20px">
@@ -480,7 +419,6 @@ export let accountRoute = [
           .response({ status: "ok", data: "Reset Password" })
           .code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ status: "err", err: error }).code(500);
       }
     },
@@ -506,10 +444,8 @@ export let accountRoute = [
       },
     },
     handler: async (request: Request, response: ResponseToolkit) => {
-      console.log(`POST api/v1/account/reset-password request from ...`);
       const email = request.payload["email"];
       const code = request.payload["passcode"];
-      // const {email, code, new_password} = request.payload
       const passcode = await Passcode.findOne({
         email: email,
         passcode: code,
@@ -551,26 +487,18 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        console.log(`POST api/v1/account/update-password request from ...`);
 
         const decodedtoken = Jwt.decode(request.params.token);
-
-        console.log("decodedtoken---------------->", decodedtoken);
-
         const passcode = await Passcode.findOne({
           email: decodedtoken.passcode.email,
           passcode: decodedtoken.passcode.passcode,
         });
-
-        console.log("passcode--------------------->", passcode);
-
         if (!passcode) {
           return response
             .response({ status: "err", err: "Passcode incorrect" })
             .code(412); // 412: precondition failed
         }
 
-        console.log(request.payload);
         const email = request.payload["email"];
         const new_Password = request.payload["new_password"];
         const account = await Account.findOne({ email });
@@ -585,7 +513,6 @@ export let accountRoute = [
         // return response.response({ account }).code(200);
         return response.response({ msg: "update Success!" }).code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ err: error }).code(500);
       }
     },
@@ -604,24 +531,15 @@ export let accountRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/account/mentors request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-        console.log(request.auth.credentials.email);
         const account = await Account.find({
           account_type: "mentor",
         }).select({ email: 1, first_name: 1, last_name: 1 });
-        // if (!account) {
-        //   return response.response({ err: "Account not found!" }).code(404);
-        // }
-        // const fullName = account.first_name + " " + account.last_name;
         return response
           .response({
             account,
           })
           .code(200);
       } catch (error) {
-        console.log(error);
         return response.response({ status: "err", err: error }).code(500);
       }
     },
@@ -639,11 +557,6 @@ export let accountRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        console.log(
-          `GET api/v1/account/profile/${request.params.accountId} request from ${request.auth.credentials.email} Time: ${currentDate}`
-        );
-
-        // Get account info
         const account = await Account.findById(request.params.accountId);
         if (!account) {
           return response

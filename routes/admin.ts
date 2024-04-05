@@ -74,7 +74,6 @@ export let adminRoute = [
         // check whether account exist, update status
         try {
           const data = request.payload;
-     
 
           const account = await Account.findOneAndUpdate(
             { email: request.params.account_email },
@@ -110,7 +109,6 @@ export let adminRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-
 
         const accounts_per_page: number = Number(
           request.params.accounts_per_page
@@ -941,7 +939,9 @@ export let adminRoute = [
 
           const categories = await Category.find({});
 
-          return response.response({ status: "ok", data: categories }).code(200);
+          return response
+            .response({ status: "ok", data: categories })
+            .code(200);
         } catch (err) {
           return response
             .response({ status: "err", err: "Category not found!" })
@@ -981,9 +981,13 @@ export let adminRoute = [
         try {
           const data = request.payload;
 
-          const categories = await Category.findOne({ _id: request.params.categoryId });
+          const categories = await Category.findOne({
+            _id: request.params.categoryId,
+          });
 
-          return response.response({ status: "ok", data: categories }).code(200);
+          return response
+            .response({ status: "ok", data: categories })
+            .code(200);
         } catch (err) {
           return response
             .response({ status: "err", err: "Category not found!" })

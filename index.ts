@@ -90,15 +90,6 @@ const init = async () => {
   }
   console.log(`🚀 Server running on ${server.info.uri} 🚀`);
   // ----------------------------------------------------- Initialize Skill, Major database -------------------------------------------------------------------//
-  await Skill.deleteMany({});
-  await Major.deleteMany({});
-  await Category.deleteMany({});
-  for (let index = 1; index <= 20; index++) {
-    await Skill.create({ name: "skill" + index });
-    await Major.create({ name: "major" + index });
-    await Category.create({ name: "category" + index });
-
-  }
 
   return server;
 };

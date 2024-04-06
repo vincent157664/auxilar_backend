@@ -100,9 +100,7 @@ export let jobRoute = [
           // invited_expert: data["invited_expert"],
         };
 
-        const newJob = new Job(
-          jobField
-        );
+        const newJob = new Job(jobField);
 
         await newJob.save();
 
@@ -457,223 +455,180 @@ export let jobRoute = [
         }
 
         const data = request.payload;
-        const filter = {};
-
-        data["skill_set"].length !== 0
-          ? (filter["skill_set"] = data["skill_set"])
-          : null;
-        data["category"].length !== 0
-          ? (filter["category"] = data["category"])
-          : null;
-        data["title"] !== "emptystringtitle"
-          ? (filter["title"] = data["title"])
-          : null;
-
-        data["budget_type"]?.["hourly"] ? (filter["hourly"] = true) : null;
-
-        const query_skillandtitle = {};
-        filter["skill_set"]
-          ? (query_skillandtitle["skill_set"] = { $in: filter["skill_set"] })
-          : null;
-
-        filter["category"]
-          ? (query_skillandtitle["category"] = { $in: filter["category"] })
-          : null;
-
-        filter["title"]
-          ? (query_skillandtitle["title"] = {
-              $regex: new RegExp("^" + filter["title"].toLowerCase(), "i"),
-            })
-          : null;
-
-        // ----------------------------- query for budget type is hourly ---------------------------
-
-        let query_hourly_budget = {};
-        const query_hourly = [];
-        if (data["budget_type"]?.["hourly"]?.["ishourly"] === true) {
-          query_hourly_budget = {
-            budget_type: 1,
-          };
-        }
-        if (data["budget_type"]?.["hourly"]?.["hourly_range"].length !== 0) {
-          data["budget_type"]?.["hourly"]?.["hourly_range"].forEach((item) => {
-            query_hourly.push({
-              $and: [
-                { budget_amount: { $gte: item.min_value } },
-                { budget_amount: { $lt: item.max_value } },
-              ],
-            });
-          });
-        }
-
-        // ------------------------------- query for budget type is fixed --------------------------
-        let query_fixed_budget = {};
-        const query_fixed = [];
-
-        if (data["budget_type"]?.["fixed"]?.["isfixed"] === true) {
-          query_fixed_budget = {
-            budget_type: 0,
-          };
-        }
-        if (data["budget_type"]?.["fixed"]?.["fixed_range"].length !== 0) {
-          data["budget_type"]?.["fixed"]?.["fixed_range"].forEach((item) => {
-            query_fixed.push({
-              $and: [
-                { budget_amount: { $gte: item.min_value } },
-                { budget_amount: { $lt: item.max_value } },
-              ],
-            });
-          });
-        }
-
-        const query_number_of_proposals = [];
-        if (data["number_of_proposals"].length !== 0) {
-          data["number_of_proposals"].forEach((item) => {
-            query_number_of_proposals.push({
-              $expr: {
-                $and: [
-                  { $gte: [{ $size: "$proposals" }, item.min_value] },
-                  { $lt: [{ $size: "$proposals" }, item.max_value] },
-                ],
-              },
-            });
-          });
-        }
-
-        const query_client_info = [];
-        if (data["client_info"]?.["payment_verified"])
-          query_client_info.push({ "clientData.payment_verify": true });
-        if (data["client_info"]?.["payment_unverified"])
-          query_client_info.push({ "clientData.payment_verify": false });
-
-        const query_hours_per_week = [];
-        if (data["hours_per_week"].length !== 0) {
-          data["hours_per_week"].forEach((item) => {
-            query_hours_per_week.push({ hours_per_week: item });
-          });
-        }
-
-        const query_project_duration = [];
-        if (data["project_duration"].length !== 0) {
-          data["project_duration"].forEach((item) => {
-            query_project_duration.push({ project_duration: item });
-          });
-        }
-        data["jobs_per_page"]
-          ? (filter["jobs_per_page"] = data["jobs_per_page"])
-          : null;
-
-        data["page_index"] ? (filter["page_index"] = data["page_index"]) : null;
-
-        const queryAll = {
-          $and: [
-            query_skillandtitle,
-          
-          ],
+        const skill_set = data["skill_set"] as string[];
+        const title = data["title"] as string;
+        const category = data["category"] as string[];
+        const budget_type = data["budget_type"];
+        const clientInfo = data["client_info"];
+        const hours_week = data["hours_per_week"];
+        const project_duration = data["project_duration"];
+        const jobs_per_page = data["jobs_per_page"] as number;
+        const page_index = data["page_index"] as number;
+        const sortBy = data["sortBy"];
+        let query = [];
+        let objectParam = {};
+        let matchObject = {};
+        let lookupParam = {};
+        let unwindParam = { $unwind: "$clientData" };
+        let aggregationStages = [];
+        const pageCriteria = {
+          $skip: jobs_per_page * (page_index - 1),
+        };
+        const indexCriteria = {
+          $limit: jobs_per_page,
         };
 
-        if (Object.keys(query_hourly_budget).length !== 0) {
-          if (queryAll.$and[1]) {
-            if (query_hourly.length !== 0) {
-              queryAll.$and[1]["$or"].push({
-                $and: [query_hourly_budget, { $or: query_hourly }],
-              });
-            } else {
-              queryAll.$and[1]["$or"].push({ $and: [query_hourly_budget] });
-            }
-          } else {
-            if (query_hourly.length !== 0) {
-              queryAll.$and.push({
-                $or: [{ $and: [query_hourly_budget, { $or: query_hourly }] }],
-              });
-            } else {
-              queryAll.$and.push({ $or: [{ $and: [query_hourly_budget] }] });
-            }
-          }
-       
+        if (skill_set.length !== 0) {
+          objectParam = { skill_set: { $in: skill_set } };
+          query.push(objectParam);
         }
-
-        if (Object.keys(query_fixed_budget).length !== 0) {
-          if (queryAll.$and[1]) {
-            if (query_fixed.length !== 0) {
-              queryAll.$and[1]["$or"].push({
-                $and: [query_fixed_budget, { $or: query_fixed }],
-              });
-            } else {
-              queryAll.$and[1]["$or"].push({ $and: [query_fixed_budget] });
-            }
-          } else {
-            if (query_fixed.length !== 0) {
-              queryAll.$and.push({
-                $or: [{ $and: [query_fixed_budget, { $or: query_fixed }] }],
-              });
-            } else {
-              queryAll.$and.push({ $or: [{ $and: [query_fixed_budget] }] });
-            }
-          }
-
+        if (title !== "") {
+          objectParam = {
+            $or: [
+              { title: { $regex: title, $options: "i" } },
+              { description: { $regex: title, $options: "i" } },
+            ],
+          };
+          query.push(objectParam);
         }
-
-        if (query_number_of_proposals.length !== 0) {
-          queryAll.$and[1]
-            ? queryAll.$and[1]["$or"].push({ $or: query_number_of_proposals })
-            : queryAll.$and.push({ $or: [{ $or: query_number_of_proposals }] });
+        if (category.length !== 0) {
+          objectParam = { category: { $in: category } };
+          query.push(objectParam);
         }
-
-        if (query_client_info.length !== 0) {
-          queryAll.$and[1]
-            ? queryAll.$and[1]["$or"].push({ $or: query_client_info })
-            : queryAll.$and.push({ $or: [{ $or: query_client_info }] });
+        if (budget_type !== null) {
+          objectParam = {
+            $or: [
+              {
+                $and: [
+                  { budget_type: 0 },
+                  budget_type.fixed.fixed_range.length > 0
+                    ? {
+                        $or: budget_type.fixed.fixed_range.map((range) => ({
+                          budget_amount: {
+                            $gte: range.min_value,
+                            $lte: range.max_value,
+                          },
+                        })),
+                      }
+                    : {},
+                ],
+              },
+              {
+                $and: [
+                  { budget_type: 1 },
+                  budget_type.hourly.hourly_range.length > 0
+                    ? {
+                        budget_amount: {
+                          $gte: budget_type.hourly.hourly_range[0],
+                          $lte: budget_type.hourly.hourly_range[1],
+                        },
+                      }
+                    : {},
+                ],
+              },
+            ],
+          };
+          console.log(objectParam);
+          query.push(objectParam);
         }
-
-        if (query_hours_per_week.length !== 0) {
-          queryAll.$and[1]
-            ? queryAll.$and[1]["$or"].push({ $or: query_hours_per_week })
-            : queryAll.$and.push({ $or: [{ $or: query_hours_per_week }] });
-        }
-
-        if (query_project_duration.length !== 0) {
-          queryAll.$and[1]
-            ? queryAll.$and[1]["$or"].push({ $or: query_project_duration })
-            : queryAll.$and.push({ $or: [{ $or: query_project_duration }] });
-        }
-
-        const findedjobs = await Job.aggregate([
-          {
-            $lookup: {
-              from: "clients",
-              localField: "client",
-              foreignField: "_id",
-              as: "clientData",
-              pipeline: [
-                {
-                  $project: {
-                    payment_verify: 1,
+        if (clientInfo !== null) {
+          if (clientInfo.payment_verified === true) {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      payment_verify: 1,
+                    },
                   },
-                },
-              ],
+                ],
+              },
+            };
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          } else if (clientInfo.payment_unverified === true) {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      payment_verify: 0,
+                    },
+                  },
+                ],
+              },
+            };
+
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          } else {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      "client.payment_verify": { $or: [0, 1] },
+                    },
+                  },
+                ],
+              },
+            };
+
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          }
+        }
+        if (hours_week.length !== 0) {
+          objectParam = {
+            hours_per_week: { $in: hours_week },
+          };
+          query.push(objectParam);
+        }
+        if (project_duration.length !== 0) {
+          objectParam = {
+            project_duration: { $in: project_duration },
+          };
+          query.push(objectParam);
+        }
+        if (query.length !== 0) matchObject = { $and: query };
+        console.log("query", query);
+        aggregationStages.push({ $match: matchObject });
+
+        if (sortBy === "Relevance") {
+          aggregationStages.unshift({
+            $project: {
+              score: { $meta: "textScore" },
             },
-          },
-          {
-            $match: queryAll,
-          },
-          {
-            $skip: filter["jobs_per_page"] * (filter["page_index"] - 1),
-          },
-          {
-            $limit: filter["jobs_per_page"],
-          },
-        ]);
+          });
+          aggregationStages.push({ $sort: { score: { $meta: "textScore" } } });
+        } else if (sortBy === "Latest") {
+          aggregationStages.push({ $sort: { "job.pub_date": -1 } });
+        }
+        console.log(aggregationStages);
+        const findedjobs = await Job.aggregate(aggregationStages).exec();
 
         return response.response({ status: "ok", data: findedjobs }).code(200);
       } catch (error) {
+        console.log(error);
         return response.response({ status: "err", err: error }).code(501);
       }
     },
   },
   {
-    method: "PATCH",
-    path: "/{jobId}/invite/{expertId}",
+    method: "POST",
+    path: "/invite",
     options: {
       auth: "jwt",
       description: "Invite expert to the posted job",
@@ -692,8 +647,6 @@ export let jobRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        const currentDate = new Date().toUTCString();
-
         // check whether account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -706,17 +659,19 @@ export let jobRoute = [
 
         // Check whether expert profile exist
         const expert = await Expert.findOne({
-          account: request.params.expertId,
+          account: request.payload["expertId"],
         }).populate("account", ["first_name", "last_name"]);
         if (!expert) {
           return response
             .response({ status: "err", err: "Expert does not exist" })
             .code(404);
         }
+        const jobId = request.payload["jobId"];
+        const expertId = request.payload["expertId"];
 
         // check already invited
         const isAreadyInvited = await Job.findOne({
-          _id: request.params.jobId,
+          _id: jobId,
           client_email: account.email,
           "invited_expert.id": expert.account._id,
         });
@@ -727,19 +682,15 @@ export let jobRoute = [
         }
 
         let inviteExpertToJob;
-        const data = request.payload;
-
         try {
           const inviteExpertField = {
-            id: request.params.expertId,
+            id: expertId,
             first_name: expert.account.first_name,
             last_name: expert.account.last_name,
-            type: data["type"],
-            content: data["content"],
           };
           inviteExpertToJob = await Job.findOneAndUpdate(
             {
-              _id: request.params.jobId,
+              _id: jobId,
               client_email: account.email,
             },
             {
@@ -755,8 +706,8 @@ export let jobRoute = [
             .code(404);
         }
         return response
-          .response({ status: "ok", data: inviteExpertToJob })
-          .code(201);
+          .response({ code: 200, data: inviteExpertToJob.invited_expert })
+          .code(200);
       } catch (err) {
         return response
           .response({ status: "err", err: "Not implemented!" })

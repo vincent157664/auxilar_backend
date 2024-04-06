@@ -468,6 +468,8 @@ export let jobRoute = [
         let query = [];
         let objectParam = {};
         let matchObject = {};
+        let lookupParam = {};
+        let unwindParam = { $unwind: "$clientData" };
         let aggregationStages = [];
         const pageCriteria = {
           $skip: jobs_per_page * (page_index - 1),
@@ -479,7 +481,6 @@ export let jobRoute = [
         if (skill_set.length !== 0) {
           objectParam = { skill_set: { $in: skill_set } };
           query.push(objectParam);
-          console.log(skill_set);
         }
         if (title !== "") {
           objectParam = {
@@ -500,30 +501,94 @@ export let jobRoute = [
               {
                 $and: [
                   { budget_type: 0 },
-                  {
-                    budget_amount: {
-                      $gte: budget_type.fixed.hourly_range?.[0],
-                      $lte: budget_type.fixed.hourly_range?.[1],
-                    },
-                  },
+                  budget_type.fixed.fixed_range.length > 0
+                    ? {
+                        $or: budget_type.fixed.fixed_range.map((range) => ({
+                          budget_amount: {
+                            $gte: range.min_value,
+                            $lte: range.max_value,
+                          },
+                        })),
+                      }
+                    : {},
                 ],
               },
               {
                 $and: [
                   { budget_type: 1 },
-                  {
-                    budget_amount: {
-                      $gte: budget_type.hourly.hourly_range?.[0],
-                      $lte: budget_type.hourly.hourly_range?.[1],
-                    },
-                  },
+                  budget_type.hourly.hourly_range.length > 0
+                    ? {
+                        budget_amount: {
+                          $gte: budget_type.hourly.hourly_range[0],
+                          $lte: budget_type.hourly.hourly_range[1],
+                        },
+                      }
+                    : {},
                 ],
               },
             ],
           };
+          console.log(objectParam);
+          query.push(objectParam);
         }
         if (clientInfo !== null) {
-          
+          if (clientInfo.payment_verified === true) {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      payment_verify: 1,
+                    },
+                  },
+                ],
+              },
+            };
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          } else if (clientInfo.payment_unverified === true) {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      payment_verify: 0,
+                    },
+                  },
+                ],
+              },
+            };
+
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          } else {
+            lookupParam = {
+              $lookup: {
+                from: "clients",
+                localField: "client",
+                foreignField: "_id",
+                as: "clientData",
+                pipeline: [
+                  {
+                    $project: {
+                      "client.payment_verify": { $or: [0, 1] },
+                    },
+                  },
+                ],
+              },
+            };
+
+            aggregationStages.push(lookupParam);
+            aggregationStages.push(unwindParam);
+          }
         }
         if (hours_week.length !== 0) {
           objectParam = {

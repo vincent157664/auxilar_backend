@@ -147,10 +147,6 @@ export const findPostedJobSchema = Joi.object({
       "any.required": "Please provide budget_type",
     }),
 
-  number_of_proposals: Joi.array<min_max_object>().required().messages({
-    "any.required": "Please provide range of number of proposals",
-  }),
-
   client_info: Joi.object({
     payment_verified: Joi.boolean(),
     payment_unverified: Joi.boolean(),

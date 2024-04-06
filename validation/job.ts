@@ -173,10 +173,10 @@ export const findPostedJobSchema = Joi.object({
 });
 
 export const inviteExpertSchema = Joi.object({
-  type: Joi.string().required().messages({
-    "any.required": "Please provide invite type",
+  jobId: Joi.string().required().messages({
+    "any.required": "Please provide job id",
   }),
-  content: Joi.string().required().messages({
-    "any.required": "Please provide invite content",
+  expertId: Joi.string().required().messages({
+    "any.required": "Please provide expert id",
   }),
 });

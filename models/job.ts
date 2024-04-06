@@ -154,7 +154,7 @@ const JobSchema = new Schema({
        * 4: active      interviewed
        * 5: progress    hired
        * 6: finished    finished
-       * 7: cancelled
+       * 7: cancelle
        * 8: disputed
        */
       proposal_status: {

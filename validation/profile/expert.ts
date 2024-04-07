@@ -93,6 +93,9 @@ export const updatePortfolioItemSchema = Joi.object({
   text: Joi.string().required().messages({
     "any.required": "Please provide text",
   }),
+  link: Joi.string().required().messages({
+    "any.required": "Please provide link",
+  }),
 });
 
 export const addPortfolioItemSchema = Joi.object({
@@ -101,6 +104,9 @@ export const addPortfolioItemSchema = Joi.object({
   }),
   text: Joi.string().required().messages({
     "any.required": "Please provide text",
+  }),
+  link: Joi.string().required().messages({
+    "any.required": "Please provide link",
   }),
 });
 
@@ -149,7 +155,7 @@ export const updatePersonDetailSchema = Joi.object({
   // }),
 });
 export const updateEducationSchema = Joi.object({
-  education: Joi.object().required().messages({
+  education: Joi.array().required().messages({
     "any.required": "Please provide education",
   }),
 });

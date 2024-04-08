@@ -192,6 +192,7 @@ export let expertRoute = [
           {
             $set: {
               avatar: data["avatar"],
+              titleName: data["titleName"],
               hourly_rate: data["hourly_rate"],
             },
           }
@@ -203,7 +204,6 @@ export let expertRoute = [
 
         return response.response({
           status: "ok",
-          // data: "Profile updated successfully",
           data: responseData,
         });
       } catch (error) {
@@ -355,6 +355,7 @@ export let expertRoute = [
             $set: {
               "portfolios.$.text": data["text"],
               "portfolios.$.content": data["content"],
+              "portfolios.$.link": data["link"],
             },
           },
           {
@@ -400,8 +401,7 @@ export let expertRoute = [
             account: account.id,
           },
           { $pull: { portfolios: { _id: request.params.portfolio_id } } }
-        ).then((res) => {
-        });
+        ).then((res) => {});
 
         const responseData = await Expert.findOne({ account: account.id });
 
@@ -438,13 +438,11 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
 
         const data = request.payload;
-
 
         await Expert.updateOne(
           {
@@ -455,6 +453,7 @@ export let expertRoute = [
               portfolios: {
                 content: data["content"],
                 text: data["text"],
+                link: data["link"],
               },
             },
           },
@@ -500,7 +499,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -551,7 +549,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -566,8 +563,6 @@ export let expertRoute = [
             },
           }
         );
-
-       
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
@@ -605,7 +600,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -642,8 +636,6 @@ export let expertRoute = [
         // data["city"]
         //   ? (expert["city"] = data["city"])
         //   : (expert["city"] = null);
-
-      
 
         const responseData = await Expert.findOne({
           account: request.auth.credentials.accountId,
@@ -683,7 +675,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -727,7 +718,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const deleteStatus = await Expert.deleteOne({
           account: request.auth.credentials.accountId,
         });
@@ -782,7 +772,7 @@ export let expertRoute = [
         const queryAll = {};
         if (data["skills"].length) queryAll["skills"] = { $in: data["skills"] };
         if (data["majors"].length) queryAll["majors"] = { $in: data["majors"] };
-               if (data["email"]) queryAll["email"] = data["email"];
+        if (data["email"]) queryAll["email"] = data["email"];
 
         const findExperts = await Expert.aggregate([
           {
@@ -826,7 +816,6 @@ export let expertRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const allSkills = await Skill.find();
         if (!allSkills) {
           return response
@@ -852,7 +841,6 @@ export let expertRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const allMajors = await Major.find();
         if (!allMajors) {
           return response

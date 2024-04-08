@@ -51,6 +51,11 @@ const ExpertSchema = new Schema({
     type: String,
   },
 
+  titleName: {
+    type: String,
+    required: true,
+  },
+
   hourly_rate: {
     type: String,
     required: true,
@@ -81,6 +86,10 @@ const ExpertSchema = new Schema({
       text: {
         type: String,
         required: true,
+      },
+      link: {
+        type: String,
+        required: false,
       },
     },
   ],

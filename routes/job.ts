@@ -748,8 +748,9 @@ export let jobRoute = [
           return response.response({ status: "err", err: "Job is not found!" });
         }
 
-        const queryAll = {};
-        if (job.skill_set.length) queryAll["skills"] = { $in: job.skill_set };
+        let skills = [];
+        if (job.skill_set.length) skills = job.skill_set;
+        let queryAll = { skills: { $in: skills } };
 
         const findExperts = await Expert.aggregate([
           {
@@ -758,20 +759,13 @@ export let jobRoute = [
               localField: "account",
               foreignField: "_id",
               as: "accountData",
-              pipeline: [
-                {
-                  $project: {
-                    first_name: 1,
-                    last_name: 1,
-                  },
-                },
-              ],
             },
           },
           {
             $match: queryAll,
           },
         ]);
+
         return response.response({ status: "ok", data: findExperts }).code(200);
       } catch (err) {
         return response

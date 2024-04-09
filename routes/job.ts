@@ -465,161 +465,175 @@ export let jobRoute = [
         const jobs_per_page = data["jobs_per_page"] as number;
         const page_index = data["page_index"] as number;
         const sortBy = data["sortBy"];
-        let query = [];
-        let objectParam = {};
-        let matchObject = {};
-        let lookupParam = {};
-        let unwindParam = { $unwind: "$clientData" };
-        let aggregationStages = [];
-        const pageCriteria = {
-          $skip: jobs_per_page * (page_index - 1),
-        };
-        const indexCriteria = {
-          $limit: jobs_per_page,
-        };
-
-        if (skill_set.length !== 0) {
-          objectParam = { skill_set: { $in: skill_set } };
-          query.push(objectParam);
-        }
-        if (title !== "") {
-          objectParam = {
-            $or: [
-              { title: { $regex: title, $options: "i" } },
-              { description: { $regex: title, $options: "i" } },
-            ],
+        const searchWords = title.split(" ");
+        let uniqueResults = [];
+        for (const word of searchWords) {
+          let searchResults = [];
+          const searchWords = title.split(" ");
+          let query = [];
+          let objectParam = {};
+          let matchObject = {};
+          let lookupParam = {};
+          let unwindParam = { $unwind: "$clientData" };
+          let aggregationStages = [];
+          const pageCriteria = {
+            $skip: jobs_per_page * (page_index - 1),
           };
-          query.push(objectParam);
-        }
-        if (category.length !== 0) {
-          objectParam = { category: { $in: category } };
-          query.push(objectParam);
-        }
-        if (budget_type !== null) {
-          objectParam = {
-            $or: [
-              {
-                $and: [
-                  { budget_type: 0 },
-                  budget_type.fixed.fixed_range.length > 0
-                    ? {
-                        $or: budget_type.fixed.fixed_range.map((range) => ({
-                          budget_amount: {
-                            $gte: range.min_value,
-                            $lte: range.max_value,
-                          },
-                        })),
-                      }
-                    : {},
-                ],
-              },
-              {
-                $and: [
-                  { budget_type: 1 },
-                  budget_type.hourly.hourly_range.length > 0
-                    ? {
-                        budget_amount: {
-                          $gte: budget_type.hourly.hourly_range[0],
-                          $lte: budget_type.hourly.hourly_range[1],
-                        },
-                      }
-                    : {},
-                ],
-              },
-            ],
+          const indexCriteria = {
+            $limit: jobs_per_page,
           };
-          console.log(objectParam);
-          query.push(objectParam);
-        }
-        if (clientInfo !== null) {
-          if (clientInfo.payment_verified === true) {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      payment_verify: 1,
-                    },
-                  },
-                ],
-              },
-            };
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
-          } else if (clientInfo.payment_unverified === true) {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      payment_verify: 0,
-                    },
-                  },
-                ],
-              },
-            };
 
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
-          } else {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      "client.payment_verify": { $or: [0, 1] },
-                    },
-                  },
-                ],
-              },
-            };
-
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
+          if (skill_set.length !== 0) {
+            objectParam = { skill_set: { $in: skill_set } };
+            query.push(objectParam);
           }
-        }
-        if (hours_week.length !== 0) {
-          objectParam = {
-            hours_per_week: { $in: hours_week },
-          };
-          query.push(objectParam);
-        }
-        if (project_duration.length !== 0) {
-          objectParam = {
-            project_duration: { $in: project_duration },
-          };
-          query.push(objectParam);
-        }
-        if (query.length !== 0) matchObject = { $and: query };
-        console.log("query", query);
-        aggregationStages.push({ $match: matchObject });
+          if (word !== "") {
+            objectParam = {
+              $or: [
+                { word: { $regex: word, $options: "i" } },
+                { description: { $regex: word, $options: "i" } },
+              ],
+            };
+            query.push(objectParam);
+          }
+          if (category.length !== 0) {
+            objectParam = { category: { $in: category } };
+            query.push(objectParam);
+          }
+          if (budget_type !== null) {
+            objectParam = {
+              $or: [
+                {
+                  $and: [
+                    { budget_type: 0 },
+                    budget_type.fixed.fixed_range.length > 0
+                      ? {
+                          $or: budget_type.fixed.fixed_range.map((range) => ({
+                            budget_amount: {
+                              $gte: range.min_value,
+                              $lte: range.max_value,
+                            },
+                          })),
+                        }
+                      : {},
+                  ],
+                },
+                {
+                  $and: [
+                    { budget_type: 1 },
+                    budget_type.hourly.hourly_range.length > 0
+                      ? {
+                          budget_amount: {
+                            $gte: budget_type.hourly.hourly_range[0],
+                            $lte: budget_type.hourly.hourly_range[1],
+                          },
+                        }
+                      : {},
+                  ],
+                },
+              ],
+            };
+            console.log(objectParam);
+            query.push(objectParam);
+          }
+          if (clientInfo !== null) {
+            if (clientInfo.payment_verified === true) {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        payment_verify: 1,
+                      },
+                    },
+                  ],
+                },
+              };
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            } else if (clientInfo.payment_unverified === true) {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        payment_verify: 0,
+                      },
+                    },
+                  ],
+                },
+              };
 
-        if (sortBy === "Relevance") {
-          aggregationStages.unshift({
-            $project: {
-              score: { $meta: "textScore" },
-            },
-          });
-          aggregationStages.push({ $sort: { score: { $meta: "textScore" } } });
-        } else if (sortBy === "Latest") {
-          aggregationStages.push({ $sort: { "job.pub_date": -1 } });
-        }
-        console.log(aggregationStages);
-        const findedjobs = await Job.aggregate(aggregationStages).exec();
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            } else {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        "client.payment_verify": { $or: [0, 1] },
+                      },
+                    },
+                  ],
+                },
+              };
 
-        return response.response({ status: "ok", data: findedjobs }).code(200);
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            }
+          }
+          if (hours_week.length !== 0) {
+            objectParam = {
+              hours_per_week: { $in: hours_week },
+            };
+            query.push(objectParam);
+          }
+          if (project_duration.length !== 0) {
+            objectParam = {
+              project_duration: { $in: project_duration },
+            };
+            query.push(objectParam);
+          }
+          if (query.length !== 0) matchObject = { $and: query };
+          console.log("query", query);
+          aggregationStages.push({ $match: matchObject });
+
+          if (sortBy === "Relevance") {
+            aggregationStages.unshift({
+              $project: {
+                score: { $meta: "textScore" },
+              },
+            });
+            aggregationStages.push({
+              $sort: { score: { $meta: "textScore" } },
+            });
+          } else if (sortBy === "Latest") {
+            aggregationStages.push({ $sort: { "job.pub_date": -1 } });
+          }
+          console.log(aggregationStages);
+          const findedjobs = await Job.aggregate(aggregationStages).exec();
+          searchResults.push([...findedjobs]);
+          const combinedResults = searchResults.flat();
+          uniqueResults = Array.from(
+            new Set(combinedResults.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+        }
+        return response
+          .response({ status: "ok", data: uniqueResults })
+          .code(200);
       } catch (error) {
         console.log(error);
         return response.response({ status: "err", err: error }).code(501);

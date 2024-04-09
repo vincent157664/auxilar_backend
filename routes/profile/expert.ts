@@ -192,6 +192,7 @@ export let expertRoute = [
           {
             $set: {
               avatar: data["avatar"],
+              titleName: data["titleName"],
               hourly_rate: data["hourly_rate"],
             },
           }
@@ -203,7 +204,6 @@ export let expertRoute = [
 
         return response.response({
           status: "ok",
-          // data: "Profile updated successfully",
           data: responseData,
         });
       } catch (error) {

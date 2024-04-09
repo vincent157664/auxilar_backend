@@ -69,6 +69,9 @@ export const updateBaseInfoSchema = Joi.object({
     "any.required": "Please provie avatar",
   }),
 
+  titleName: Joi.string().required().messages({
+    "any.required": "Please provie title",
+  }),
   hourly_rate: Joi.string().required().messages({
     "any.required": "Please provide hourly_rate.",
   }),

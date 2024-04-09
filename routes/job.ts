@@ -469,7 +469,6 @@ export let jobRoute = [
         let uniqueResults = [];
         for (const word of searchWords) {
           let searchResults = [];
-          const searchWords = title.split(" ");
           let query = [];
           let objectParam = {};
           let matchObject = {};
@@ -490,8 +489,20 @@ export let jobRoute = [
           if (word !== "") {
             objectParam = {
               $or: [
-                { word: { $regex: word, $options: "i" } },
-                { description: { $regex: word, $options: "i" } },
+                { "expert.titleName": { $regex: word, $options: "i" } },
+                { "expert.summary": { $regex: word, $options: "i" } },
+                {
+                  "expert.skills": {
+                    $elemMatch: {
+                      $regex: word,
+                      $options: "i",
+                    },
+                  },
+                },
+                { "expert.country": { $regex: word, $options: "i" } },
+                { "expert.state": { $regex: word, $options: "i" } },
+                { "expert.address": { $regex: word, $options: "i" } },
+                { "expert.city": { $regex: word, $options: "i" } },
               ],
             };
             query.push(objectParam);
@@ -623,7 +634,8 @@ export let jobRoute = [
           } else if (sortBy === "Latest") {
             aggregationStages.push({ $sort: { "job.pub_date": -1 } });
           }
-          console.log(aggregationStages);
+          aggregationStages.push(pageCriteria);
+          aggregationStages.push(indexCriteria);
           const findedjobs = await Job.aggregate(aggregationStages).exec();
           searchResults.push([...findedjobs]);
           const combinedResults = searchResults.flat();

@@ -484,12 +484,7 @@ export let jobRoute = [
 
           if (skill_set.length !== 0) {
             objectParam = {
-              skill_set: {
-                $elemMatch: {
-                  $regex: word,
-                  $options: "i",
-                },
-              },
+              skill_set: { $in: skill_set },
             };
             query.push(objectParam);
           }
@@ -522,30 +517,34 @@ export let jobRoute = [
           }
           if (category.length !== 0) {
             objectParam = {
-              category: {
-                $elemMatch: {
-                  $regex: word,
-                  $options: "i",
-                },
-              },
+              category: { $in: category },
             };
             query.push(objectParam);
           }
           if (budget_type !== null) {
-            objectParam = {
+            const fixedBudgetQueries = budget_type.fixed.fixed_range.map(
+              (range) => ({
+                budget_amount: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const hourlyBudgetQueries = budget_type.hourly.hourly_range.map(
+              (range) => ({
+                hourly_rate: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const objectParam = {
               $or: [
                 {
                   $and: [
                     { budget_type: 0 },
                     budget_type.fixed.fixed_range.length > 0
-                      ? {
-                          $or: budget_type.fixed.fixed_range.map((range) => ({
-                            budget_amount: {
-                              $gte: range.min_value,
-                              $lte: range.max_value,
-                            },
-                          })),
-                        }
+                      ? { $or: fixedBudgetQueries }
                       : {},
                   ],
                 },
@@ -553,18 +552,12 @@ export let jobRoute = [
                   $and: [
                     { budget_type: 1 },
                     budget_type.hourly.hourly_range.length > 0
-                      ? {
-                          budget_amount: {
-                            $gte: budget_type.hourly.hourly_range[0],
-                            $lte: budget_type.hourly.hourly_range[1],
-                          },
-                        }
+                      ? { $or: hourlyBudgetQueries }
                       : {},
                   ],
                 },
               ],
             };
-            console.log(objectParam);
             query.push(objectParam);
           }
           if (clientInfo !== null) {

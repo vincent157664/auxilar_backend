@@ -483,32 +483,52 @@ export let jobRoute = [
           };
 
           if (skill_set.length !== 0) {
-            objectParam = { skill_set: { $in: skill_set } };
+            objectParam = {
+              skill_set: {
+                $elemMatch: {
+                  $regex: word,
+                  $options: "i",
+                },
+              },
+            };
             query.push(objectParam);
           }
+
           if (word !== "") {
             objectParam = {
               $or: [
-                { "expert.titleName": { $regex: word, $options: "i" } },
-                { "expert.summary": { $regex: word, $options: "i" } },
+                { title: { $regex: word, $options: "i" } },
+                { description: { $regex: word, $options: "i" } },
                 {
-                  "expert.skills": {
+                  skills: {
                     $elemMatch: {
                       $regex: word,
                       $options: "i",
                     },
                   },
                 },
-                { "expert.country": { $regex: word, $options: "i" } },
-                { "expert.state": { $regex: word, $options: "i" } },
-                { "expert.address": { $regex: word, $options: "i" } },
-                { "expert.city": { $regex: word, $options: "i" } },
+
+                { country: { $regex: word, $options: "i" } },
+                { state: { $regex: word, $options: "i" } },
+                { address: { $regex: word, $options: "i" } },
+                { city: { $regex: word, $options: "i" } },
+                {
+                  "languages.language": { $regex: word, $options: "i" },
+                },
+                { "portfolios.text": { $regex: word, $options: "i" } },
               ],
             };
             query.push(objectParam);
           }
           if (category.length !== 0) {
-            objectParam = { category: { $in: category } };
+            objectParam = {
+              category: {
+                $elemMatch: {
+                  $regex: word,
+                  $options: "i",
+                },
+              },
+            };
             query.push(objectParam);
           }
           if (budget_type !== null) {

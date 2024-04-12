@@ -11,7 +11,8 @@ export const ProfileSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -30,7 +31,8 @@ export const updateSummarySwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -49,7 +51,8 @@ export const updateAvatarSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -67,7 +70,8 @@ export const updatePersonalInfoSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -85,7 +89,8 @@ export const updateSocialMediaSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -103,7 +108,8 @@ export const updatePaymentInfoSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -118,7 +124,8 @@ export const getProfileSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -133,7 +140,8 @@ export const deleteProfileSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

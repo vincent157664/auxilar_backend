@@ -236,7 +236,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -322,7 +325,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -352,7 +358,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -407,7 +416,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -469,7 +481,6 @@ export let jobRoute = [
         let uniqueResults = [];
         for (const word of searchWords) {
           let searchResults = [];
-          const searchWords = title.split(" ");
           let query = [];
           let objectParam = {};
           let matchObject = {};
@@ -484,37 +495,68 @@ export let jobRoute = [
           };
 
           if (skill_set.length !== 0) {
-            objectParam = { skill_set: { $in: skill_set } };
+            objectParam = {
+              skill_set: { $in: skill_set },
+            };
             query.push(objectParam);
           }
+
           if (word !== "") {
             objectParam = {
               $or: [
-                { word: { $regex: word, $options: "i" } },
+                { title: { $regex: word, $options: "i" } },
                 { description: { $regex: word, $options: "i" } },
+                {
+                  skills: {
+                    $elemMatch: {
+                      $regex: word,
+                      $options: "i",
+                    },
+                  },
+                },
+
+                { country: { $regex: word, $options: "i" } },
+                { state: { $regex: word, $options: "i" } },
+                { address: { $regex: word, $options: "i" } },
+                { city: { $regex: word, $options: "i" } },
+                {
+                  "languages.language": { $regex: word, $options: "i" },
+                },
+                { "portfolios.text": { $regex: word, $options: "i" } },
               ],
             };
             query.push(objectParam);
           }
           if (category.length !== 0) {
-            objectParam = { category: { $in: category } };
+            objectParam = {
+              category: { $in: category },
+            };
             query.push(objectParam);
           }
           if (budget_type !== null) {
-            objectParam = {
+            const fixedBudgetQueries = budget_type.fixed.fixed_range.map(
+              (range) => ({
+                budget_amount: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const hourlyBudgetQueries = budget_type.hourly.hourly_range.map(
+              (range) => ({
+                hourly_rate: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const objectParam = {
               $or: [
                 {
                   $and: [
                     { budget_type: 0 },
                     budget_type.fixed.fixed_range.length > 0
-                      ? {
-                          $or: budget_type.fixed.fixed_range.map((range) => ({
-                            budget_amount: {
-                              $gte: range.min_value,
-                              $lte: range.max_value,
-                            },
-                          })),
-                        }
+                      ? { $or: fixedBudgetQueries }
                       : {},
                   ],
                 },
@@ -522,18 +564,12 @@ export let jobRoute = [
                   $and: [
                     { budget_type: 1 },
                     budget_type.hourly.hourly_range.length > 0
-                      ? {
-                          budget_amount: {
-                            $gte: budget_type.hourly.hourly_range[0],
-                            $lte: budget_type.hourly.hourly_range[1],
-                          },
-                        }
+                      ? { $or: hourlyBudgetQueries }
                       : {},
                   ],
                 },
               ],
             };
-            console.log(objectParam);
             query.push(objectParam);
           }
           if (clientInfo !== null) {
@@ -623,7 +659,8 @@ export let jobRoute = [
           } else if (sortBy === "Latest") {
             aggregationStages.push({ $sort: { "job.pub_date": -1 } });
           }
-          console.log(aggregationStages);
+          aggregationStages.push(pageCriteria);
+          aggregationStages.push(indexCriteria);
           const findedjobs = await Job.aggregate(aggregationStages).exec();
           searchResults.push([...findedjobs]);
           const combinedResults = searchResults.flat();
@@ -724,7 +761,10 @@ export let jobRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -783,7 +823,10 @@ export let jobRoute = [
         return response.response({ status: "ok", data: findExperts }).code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },

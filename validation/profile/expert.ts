@@ -35,6 +35,9 @@ export const ProfileSchema = Joi.object({
   summary: Joi.string().required().messages({
     "any.requird": "Please provide summary",
   }),
+  titleName: Joi.string().required().messages({
+    "any.requird": "Please provide tag line",
+  }),
 
   verified_by: Joi.array<object>(),
 

@@ -20,7 +20,8 @@ export const ConversationSwagger = {
         description: "Conversation already exist",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -36,7 +37,8 @@ export const getAllConversationSwagger = {
         description: "Forbidden request.",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -52,7 +54,8 @@ export const getMyConversationSwagger = {
         description: "Conversation does not exist.",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -68,7 +71,8 @@ export const deleteMyConversationSwagger = {
         description: "Conversation does not exist.",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -87,7 +91,8 @@ export const putMessageToConversationSwagger = {
         description: "Conversation does not exist.",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -106,7 +111,8 @@ export const updateMessageSwagger = {
         description: "Message does not exist",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -122,7 +128,8 @@ export const getMessageSwagger = {
         description: "Message does not exist",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -138,7 +145,8 @@ export const deleteMessageSwagger = {
         description: "Message does not exist",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -154,7 +162,8 @@ export const downloadMessageFileSwagger = {
         description: "Message does not exist",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

@@ -64,7 +64,10 @@ export let availableTimeRoute = [
           .code(201);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({
+            status: err,
+            err: "Creating schedule failed. Please try again.",
+          })
           .code(501);
       }
     },
@@ -94,7 +97,10 @@ export let availableTimeRoute = [
         return response.response({ status: "ok", data: schedule }).code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({
+            status: err,
+            err: "Getting schedule failed. Please try again",
+          })
           .code(501);
       }
     },
@@ -135,7 +141,7 @@ export let availableTimeRoute = [
         return response.response({ status: "ok", data: schedule }).code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({ status: err, err: "Getting schedule failed." })
           .code(501);
       }
     },
@@ -194,7 +200,10 @@ export let availableTimeRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({
+            status: err,
+            err: "Updating schedule failed. Please try agian.",
+          })
           .code(501);
       }
     },
@@ -230,7 +239,10 @@ export let availableTimeRoute = [
         }
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({
+            status: err,
+            err: "Deleting schedule failed. Please try again",
+          })
           .code(501);
       }
     },

@@ -45,12 +45,9 @@ export let bookingCallRoute = [
       description: "Create a BookingCall",
       plugins: createBookingCallSwagger,
       tags: ["api", "bookingCall"],
- 
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-   
-
         const externalMeetingId = request.params.room_name;
         const clientRequestToken = uuidv4();
         const externalUseId1 = uuidv4();
@@ -62,7 +59,7 @@ export let bookingCallRoute = [
           MediaRegion: process.env.AWS_REGION, // required
           // MeetingHostId: "STRING_VALUE",
           ExternalMeetingId: externalMeetingId, // required
-         
+
           Attendees: [
             // CreateMeetingWithAttendeesRequestItemList // required
             {
@@ -74,7 +71,6 @@ export let bookingCallRoute = [
               ExternalUserId: externalUseId2, // required
             },
           ],
- 
         };
 
         const createMeetingCommand = new CreateMeetingWithAttendeesCommand(
@@ -104,11 +100,10 @@ export let bookingCallRoute = [
       description: "Get a booked call",
       plugins: createBookingCallSwagger,
       tags: ["api", "bookingCall"],
-
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-          const meetingId = request.params.room_name;
+        const meetingId = request.params.room_name;
         const clientRequestToken = uuidv4();
         const externalUseId1 = uuidv4();
         const externalUseId2 = uuidv4();
@@ -170,7 +165,10 @@ export let bookingCallRoute = [
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Getting schedule information failed. Please try again",
+          })
           .code(501);
       }
     },
@@ -212,7 +210,10 @@ export let bookingCallRoute = [
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Getting schedule information failed.",
+          })
           .code(501);
       }
     },
@@ -256,7 +257,10 @@ export let bookingCallRoute = [
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Getting schedule information failed",
+          })
           .code(501);
       }
     },
@@ -333,7 +337,10 @@ export let bookingCallRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Scheduling failed. Please try again.",
+          })
           .code(501);
       }
     },
@@ -379,7 +386,7 @@ export let bookingCallRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({ status: "err", err: "Deleting schedule failed!" })
           .code(501);
       }
     },

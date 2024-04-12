@@ -17,7 +17,8 @@ export const updateAccountStatusSwagger = {
         description: "Account already exists.",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -33,7 +34,8 @@ export const getAccountInfoSwagger = {
         description: "Forbidden request.",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -52,7 +54,8 @@ export const deleteAccountInfoSwagger = {
         description: "Account not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -71,7 +74,8 @@ export const addSkillSwagger = {
         description: "Skill already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -93,7 +97,8 @@ export const updateSkillSwagger = {
         description: "Skill already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -112,7 +117,8 @@ export const deleteSkillSwagger = {
         description: "Skill not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -131,7 +137,8 @@ export const getAllSkillSwagger = {
         description: "Skill not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -150,7 +157,8 @@ export const getSkillSwagger = {
         description: "Skill not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -169,7 +177,8 @@ export const addMajorSwagger = {
         description: "Major already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -191,7 +200,8 @@ export const updateMajorSwagger = {
         description: "Major already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -210,7 +220,8 @@ export const deleteMajorSwagger = {
         description: "Major not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -229,7 +240,8 @@ export const getAllMajorSwagger = {
         description: "Major not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -248,7 +260,8 @@ export const getMajorSwagger = {
         description: "Major not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -267,7 +280,8 @@ export const addCategorySwagger = {
         description: "Category already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -289,7 +303,8 @@ export const updateCategorySwagger = {
         description: "Category already exist!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -308,7 +323,8 @@ export const deleteCategorySwagger = {
         description: "Category not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -327,7 +343,8 @@ export const getAllCategorySwagger = {
         description: "Category not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },
@@ -346,7 +363,8 @@ export const getCategorySwagger = {
         description: "Category not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },

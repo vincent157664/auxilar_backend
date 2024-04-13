@@ -86,7 +86,10 @@ export let proposalRoute = [
 
           if (existingProposal) {
             return response
-              .response({ status: "err", err: "Proposal already exist!" })
+              .response({
+                status: "err",
+                err: "You have already sent proposal!",
+              })
               .code(409);
           }
 
@@ -250,7 +253,7 @@ export let proposalRoute = [
         try {
           const currentDate = new Date().toUTCString();
 
-                // Check whether account is expert
+          // Check whether account is expert
           const account = await Account.findOne({
             email: request.auth.credentials.email,
           });
@@ -305,7 +308,6 @@ export let proposalRoute = [
               .code(404);
           }
 
-
           // receive field
           const proposalField = {
             expert: { id: account.id, email: account.email },
@@ -318,7 +320,6 @@ export let proposalRoute = [
           };
 
           if (data["proposalData"]["mentors"].length) {
-   
             const mentor_check = [];
             data["proposalData"]["mentors"].forEach((item) => {
               mentor_check.push({
@@ -455,7 +456,6 @@ export let proposalRoute = [
       try {
         const currentDate = new Date().toUTCString();
 
-
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         });
@@ -465,7 +465,6 @@ export let proposalRoute = [
         // check account whether client if account is client display job and visisble proposals
         if (account.account_type === "client") {
           proposal = await Job.aggregate([
-
             {
               $match: {
                 _id: new ObjectId(request.params.jobId),
@@ -504,7 +503,6 @@ export let proposalRoute = [
                 expertData: 1,
               },
             },
-
           ]);
           if (!proposal) {
             return response
@@ -861,7 +859,6 @@ export let proposalRoute = [
           bucketName: "file",
         });
 
-  
         const ObjectId = mongoose.Types.ObjectId;
         let mime = require("mime-types");
         let file = bucket.find({ _id: new ObjectId(request.params.fileId) });
@@ -909,10 +906,7 @@ export let proposalRoute = [
         // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
@@ -1308,7 +1302,6 @@ export let proposalRoute = [
             },
           },
         ]);
-
 
         await Expert.findOneAndUpdate(
           {

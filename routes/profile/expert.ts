@@ -88,6 +88,7 @@ export let expertRoute = [
           avatar: data["avatar"],
           hourly_rate: data["hourly_rate"],
           summary: data["summary"],
+          titleName: data["titleName"],
           verified_by: data["verified_by"],
           portfolios: data["portfolios"],
           skills: data["skills"],

@@ -166,7 +166,7 @@ export const updateEducationSchema = Joi.object({
   }),
 });
 export const updateCertificationSchema = Joi.object({
-  education: Joi.array().required().messages({
+  certification: Joi.array().required().messages({
     "any.required": "Please provide education",
   }),
 });

@@ -8,7 +8,8 @@ export const getAllMajors = {
         description: "Major not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

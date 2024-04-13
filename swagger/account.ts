@@ -143,7 +143,8 @@ export const getAccountProfileSwagger = {
         description: "Not found!",
       },
       501: {
-        description: "Request not implemented!",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again.!",
       },
     },
   },

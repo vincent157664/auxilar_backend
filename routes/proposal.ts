@@ -217,7 +217,10 @@ export let proposalRoute = [
             .code(201);
         } catch (error) {
           return response
-            .response({ status: "err", err: "Not implemented!" })
+            .response({
+              status: "err",
+              err: "Sorry, something went wrong. Please refresh the page and try again.!",
+            })
             .code(501);
         }
       },
@@ -297,7 +300,10 @@ export let proposalRoute = [
                   bucket.delete(item.file_id);
                 } catch (err) {
                   return response
-                    .response({ status: "err", err: "Not implemented" })
+                    .response({
+                      status: "err",
+                      err: "Sorry, something went wrong. Please refresh the page and try again.",
+                    })
                     .code(501);
                 }
               });
@@ -437,7 +443,10 @@ export let proposalRoute = [
             .code(201);
         } catch (error) {
           return response
-            .response({ status: "err", err: "Not implemented!" })
+            .response({
+              status: "err",
+              err: "Sorry, something went wrong. Please refresh the page and try again.!",
+            })
             .code(501);
         }
       },
@@ -624,7 +633,10 @@ export let proposalRoute = [
         return response.response({ status: "ok", data: proposal }).code(200);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.",
+          })
           .code(501);
       }
     },
@@ -742,7 +754,10 @@ export let proposalRoute = [
           .code(201);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -836,7 +851,10 @@ export let proposalRoute = [
         return response.response({ status: "ok", data: proposal }).code(201);
       } catch (error) {
         return response
-          .response({ staus: "err", err: "Not implemented" })
+          .response({
+            staus: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.",
+          })
           .code(501);
       }
     },

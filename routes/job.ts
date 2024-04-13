@@ -236,7 +236,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -322,7 +325,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -352,7 +358,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -407,7 +416,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -749,7 +761,10 @@ export let jobRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -808,7 +823,10 @@ export let jobRoute = [
         return response.response({ status: "ok", data: findExperts }).code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },

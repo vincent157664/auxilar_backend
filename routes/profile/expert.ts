@@ -798,7 +798,10 @@ export let expertRoute = [
         return response.response({ status: "ok", data: findExperts }).code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },

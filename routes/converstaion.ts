@@ -144,7 +144,7 @@ export let conversationRoute = [
           .code(201);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({ status: "err", err: "Creating conversation failed!" })
           .code(501);
       }
     },
@@ -466,7 +466,7 @@ export let conversationRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented" })
+          .response({ status: "err", err: "Getting conversation failed" })
           .code(501);
       }
     },
@@ -553,7 +553,6 @@ export let conversationRoute = [
         if (expert_id) queryAll["$and"].push({ expert_id });
         if (mentor_id) queryAll["$and"].push({ mentor_id });
 
-
         const myConversation = await Conversation.aggregate([
           {
             $match: queryAll,
@@ -633,7 +632,7 @@ export let conversationRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented" })
+          .response({ status: "err", err: "Getting conversation failed" })
           .code(501);
       }
     },
@@ -721,7 +720,6 @@ export let conversationRoute = [
         if (expert_id) queryAll["$and"].push({ expert_id });
         if (mentor_id) queryAll["$and"].push({ mentor_id });
 
-
         // find conversation
         const myConversation = await Conversation.aggregate([
           {
@@ -760,7 +758,7 @@ export let conversationRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented" })
+          .response({ status: "err", err: "Deleting conversation failed" })
           .code(501);
       }
     },
@@ -989,7 +987,7 @@ export let conversationRoute = [
             .code(200);
         } catch (err) {
           return response
-            .response({ status: "err", err: "Not implemented" })
+            .response({ status: "err", err: "Updating conversation failed" })
             .code(501);
         }
       },
@@ -1133,7 +1131,10 @@ export let conversationRoute = [
                   bucket.delete(item.file_id);
                 } catch (err) {
                   return response
-                    .response({ staus: "err", err: "Not implemented!" })
+                    .response({
+                      staus: "err",
+                      err: "Sorry, something went wrong. Please refresh the page and try again.!",
+                    })
                     .code(501);
                 }
               });
@@ -1261,7 +1262,10 @@ export let conversationRoute = [
             .code(200);
         } catch (err) {
           return response
-            .response({ status: "err", err: "Not implemented" })
+            .response({
+              status: "err",
+              err: "Sorry, something went wrong. Please refresh the page and try again.",
+            })
             .code(501);
         }
       },
@@ -1373,7 +1377,10 @@ export let conversationRoute = [
         return response.response({ status: "ok", data: myMessage }).code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.",
+          })
           .code(501);
       }
     },
@@ -1491,7 +1498,10 @@ export let conversationRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.",
+          })
           .code(501);
       }
     },

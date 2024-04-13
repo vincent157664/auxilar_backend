@@ -17,7 +17,8 @@ export const JobSwagger = {
         description: "Job already posted.",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -39,12 +40,12 @@ export const updateJobSwagger = {
         description: "Posted job not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
 };
-
 
 export const findPostedJobSwagger = {
   "hapi-swagger": {
@@ -65,7 +66,8 @@ export const findPostedJobSwagger = {
         description: "Not acceptable request.",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -87,7 +89,8 @@ export const getAllJobSwagger = {
         description: "Posted job not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -106,7 +109,8 @@ export const getMyAllJobSwagger = {
         description: "Posted job not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -122,7 +126,8 @@ export const getJobSwagger = {
         description: "Posted job not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -140,7 +145,8 @@ export const deleteJobSwagger = {
         description: "Posted job not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -162,7 +168,8 @@ export const inviteExpertSwagger = {
         description: "Expert already invited!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -184,7 +191,8 @@ export const recommendedExpertsSwagger = {
         description: "Expert is not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

@@ -17,7 +17,8 @@ export const ProposalSwagger = {
         description: "Proposal already applyed.",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -39,7 +40,8 @@ export const updateProposalSwagger = {
         description: "Posted Proposal not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -61,7 +63,8 @@ export const getAllProposalSwagger = {
         description: "Posted Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -80,7 +83,8 @@ export const getMyAllProposalSwagger = {
         description: "Posted Proposal not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -96,7 +100,8 @@ export const getProposalSwagger = {
         description: "Posted Proposal not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -114,7 +119,8 @@ export const deleteProposalSwagger = {
         description: "Posted Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -132,7 +138,8 @@ export const downloadProposalSwagger = {
         description: "Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -151,7 +158,8 @@ export const approveProposalSwagger = {
         description: "Applied Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -170,7 +178,8 @@ export const hireProposalSwagger = {
         description: "Applied Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -188,7 +197,8 @@ export const offerProposalSwagger = {
         description: "Applied Proposal not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

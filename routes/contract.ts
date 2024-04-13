@@ -118,7 +118,7 @@ export let contractRoute = [
           .code(201);
       } catch (err) {
         return response
-          .response({ staus: "err", err: "Not implemented!" })
+          .response({ staus: "err", err: "Creating contract failed!" })
           .code(501);
       }
     },
@@ -176,7 +176,7 @@ export let contractRoute = [
         return response.response({ status: "ok", data: contract }).code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({ status: err, err: "Getting contract information failed" })
           .code(501);
       }
     },
@@ -219,7 +219,7 @@ export let contractRoute = [
         return response.response({ status: "ok", data: contract }).code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({ status: err, err: "Getting contract information failed" })
           .code(501);
       }
     },
@@ -305,7 +305,7 @@ export let contractRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({ status: err, err: "Updating contract failed" })
           .code(501);
       }
     },
@@ -362,7 +362,7 @@ export let contractRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: err, err: "Not implemented" })
+          .response({ status: err, err: "Deleting contract failed." })
           .code(501);
       }
     },

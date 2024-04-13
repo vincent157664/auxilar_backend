@@ -104,8 +104,8 @@ export let accountRoute = [
           border:2px solid rgb(0,123,168);border-radius:100px;min-width:230px;color:rgba(255,255,255,1);
           white-space:nowrap;font-weight:normal;display:block;font-family:Helvetica,Arial,sans-serif;
           font-size:16px;line-height:40px;text-align:center;text-decoration:none"
-          href="http://195.201.56.175:3000/account/verify-email/${token}" target="_blank"
-          data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/verify-email/${token}">
+          href="https://auxilar.org/account/verify-email/${token}" target="_blank"
+          data-saferedirecturl="https://www.google.com/url?q="https://auxilar.org/account/verify-email/${token}">
           Verify Email</a></div></td></tr></tbody></table></td></tr><tr>
           <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
           padding-left:20px;padding-right:20px;padding-top:20px">
@@ -139,7 +139,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const decoded = Jwt.decode(request.params.token);
         const account = new Account(decoded.newAccount);
         account.verified_status = true;
@@ -192,8 +191,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
-
         const email = request.payload["email"];
         const password = request.payload["password"];
         const account = await Account.findOne({ email });
@@ -240,7 +237,6 @@ export let accountRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         }).select("-password");
@@ -283,12 +279,11 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const new_Password = request.payload["new_password"];
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-    
+
         const hash = await bcrypt.hash(new_Password, 10);
         account.password = hash;
         await account.save();
@@ -380,7 +375,7 @@ export let accountRoute = [
        font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
         width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
         <tr><td><div style="text-align:center;margin:0 auto">
-        data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
+        data-saferedirecturl="https://www.google.com/url?q="https://auxilar.org/account/reset-password">
         passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
         <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
         padding-left:20px;padding-right:20px;padding-top:20px">
@@ -487,7 +482,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const decodedtoken = Jwt.decode(request.params.token);
         const passcode = await Passcode.findOne({
           email: decodedtoken.passcode.email,

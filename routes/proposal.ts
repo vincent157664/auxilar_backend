@@ -496,11 +496,12 @@ export let proposalRoute = [
                 pipeline: [
                   {
                     $project: {
-                      avatar: 1,
-                      first_name: 1,
-                      last_name: 1,
-                      skills: 1,
-                      majors: 1,
+                      "$expertData.avatar": 1,
+                      "$expertData.first_name": 1,
+                      "$expertData.last_name": 1,
+                      "$expertData.skills": 1,
+                      "$expertData.titleName": 1,
+                      "$expertData.majors": 1,
                     },
                   },
                 ],

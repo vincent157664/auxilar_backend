@@ -46,11 +46,10 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-      
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-
+        console.log(request.auth.credentials.accountId);
         // Check account type
         if (account.account_type !== "mentor") {
           return response
@@ -109,6 +108,7 @@ export let mentorRoute = [
           .response({ status: "ok", data: responseData })
           .code(201);
       } catch (error) {
+        console.log(error);
         return response.response({ status: "err", err: error }).code(501);
       }
     },
@@ -125,7 +125,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-     
         const mentor = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         });
@@ -168,7 +167,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-  
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -186,7 +184,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
 
         return response.response({
           status: "ok",
@@ -220,7 +217,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -239,7 +235,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
 
         return response.response({
           status: "ok",
@@ -273,7 +268,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-       
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -331,7 +325,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
- 
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -351,7 +344,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
 
         return response.response({
           status: "ok",
@@ -385,7 +377,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -439,7 +430,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
@@ -460,7 +450,6 @@ export let mentorRoute = [
         const responseData = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         }).populate("account", ["first_name", "last_name", "email"]);
-
 
         return response.response({
           status: "ok",
@@ -484,7 +473,6 @@ export let mentorRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        
         const deleteStatus = await Mentor.deleteOne({
           account: request.auth.credentials.accountId,
         });

@@ -28,6 +28,7 @@ import {
   addPortfolioItemSchema,
   findExpertSchema,
   updateBaseInfoSchema,
+  updateCertificationSchema,
   updateEducationSchema,
   updatePersonDetailSchema,
   updatePortfolioItemSchema,
@@ -683,6 +684,58 @@ export let expertRoute = [
         const data = request.payload;
         const updateData = {
           education: data["education"],
+        };
+
+        const expert = await Expert.findOneAndUpdate(
+          { account: account.id },
+          {
+            $set: updateData,
+          }
+        );
+
+        const responseData = await Expert.findOne({
+          account: request.auth.credentials.accountId,
+        })
+          .populate("account", ["first_name", "last_name", "email"])
+          .select("-ongoing_project");
+
+        return response.response({
+          status: "ok",
+          data: responseData,
+        });
+      } catch (error) {
+        return response.response({ status: "err", err: error }).code(501);
+      }
+    },
+  },
+  {
+    method: "PUT",
+    path: "/certification",
+    options: {
+      auth: "jwt",
+      description: "Update expert certification",
+      plugins: updateEducationSwagger,
+      tags: ["api", "expert"],
+      validate: {
+        payload: updateCertificationSchema,
+        options,
+        failAction: (request, h, error) => {
+          const details = error.details.map((d) => {
+            return { err: d.message, path: d.path };
+          });
+          return h.response(details).code(400).takeover();
+        },
+      },
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const account = await Account.findById(
+          request.auth.credentials.accountId
+        );
+
+        const data = request.payload;
+        const updateData = {
+          certification: data["certification"],
         };
 
         const expert = await Expert.findOneAndUpdate(

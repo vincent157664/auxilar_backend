@@ -54,11 +54,11 @@ export let conversationRoute = [
         });
 
         // If account is expert return 403 error
-        if (account.account_type === "expert") {
-          return response
-            .response({ status: "err", err: "Forbidden request!" })
-            .code(403);
-        }
+        // if (account.account_type === "expert") {
+        //   return response
+        //     .response({ status: "err", err: "Forbidden request!" })
+        //     .code(403);
+        // }
 
         const data = request.payload;
 
@@ -143,6 +143,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: newConversation })
           .code(201);
       } catch (err) {
+        console.log(err);
         return response
           .response({ status: "err", err: "Creating conversation failed!" })
           .code(501);

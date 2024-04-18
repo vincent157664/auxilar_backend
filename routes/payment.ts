@@ -47,6 +47,7 @@ export let paymentRoute = [
           })
           .code(200);
       } catch (error) {
+        console.log(error);
         return response.response({ status: "err", err: error }).code(501);
       }
     },

@@ -211,9 +211,7 @@ export let accountRoute = [
         failAction: (request, h, error) => {
           const details = error.details.map((d) => {
             return {
-              // message: d.message,
               err: d.message,
-              // path: d.path,
             };
           });
           return h.response(details).code(400).takeover();
@@ -388,7 +386,7 @@ export let accountRoute = [
         //                 We will notify you of our decision by email within 24 hours.
         //                 Thanks for your time,
         //                 The Auxilar Team`;
-          const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
+        const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
         <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
@@ -416,33 +414,33 @@ export let accountRoute = [
           padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
           Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
-      //   const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
-      // <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      // <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
-      // <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
-      // </td></tr>
-      // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      // padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
-      // font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
-      // Update Password</h2></td></tr>
-      // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      // padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
-      // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      // padding-left:20px;padding-right:20px;padding-top:20px">
-      // Thanks for your interest in Auxilar! To complete your password update, we need you to
-      //  reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
-      //  font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
-      //   width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
-      //   <tr><td><div style="text-align:center;margin:0 auto">
-      //   data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
-      //   passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
-      //   <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      //   padding-left:20px;padding-right:20px;padding-top:20px">
-      //   Please note that not all applications to join Auxilar are accepted.
-      //   We will notify you of our decision by email within 24 hours. </td></tr>
-      //   <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      //   padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
-      //   Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
+        //   const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
+        // <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        // <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
+        // <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
+        // </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
+        // font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
+        // Update Password</h2></td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">
+        // Thanks for your interest in Auxilar! To complete your password update, we need you to
+        //  reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
+        //  font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
+        //   width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
+        //   <tr><td><div style="text-align:center;margin:0 auto">
+        //   data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
+        //   passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
+        //   <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:20px">
+        //   Please note that not all applications to join Auxilar are accepted.
+        //   We will notify you of our decision by email within 24 hours. </td></tr>
+        //   <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
+        //   Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
         const emailParams = {
           Source: "galaxydragon0702@gmail.com",
@@ -706,7 +704,10 @@ export let accountRoute = [
         return response.response({ status: "ok", data: accountProfile });
       } catch (err) {
         return response
-          .response({ status: "err", err: "Getting profile failed. Please try again!" })
+          .response({
+            status: "err",
+            err: "Getting profile failed. Please try again!",
+          })
           .code(501);
       }
     },

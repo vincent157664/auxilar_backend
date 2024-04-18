@@ -644,7 +644,6 @@ export let jobRoute = [
             query.push(objectParam);
           }
           if (query.length !== 0) matchObject = { $and: query };
-          console.log("query", query);
           aggregationStages.push({ $match: matchObject });
 
           if (sortBy === "Relevance") {

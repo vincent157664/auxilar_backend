@@ -1,14 +1,13 @@
 import mongoose from "mongoose";
 import config from "../config";
 
-
 const db: string = config.mongoURI;
 
 const dbConnect = async () => {
   try {
     await mongoose.connect(db);
-    
-    console.log("📡 Database Connected 📡");
+
+    console.log("📡 Database Connected 📡", db);
   } catch (error) {
     console.log(error);
   }

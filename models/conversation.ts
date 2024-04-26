@@ -1,3 +1,5 @@
+import { required } from "joi";
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -70,6 +72,10 @@ const ConversationSchema = new Schema({
       },
       expire_date: {
         type: Date,
+      },
+      readStatus: {
+        type: Boolean,
+        required: false,
       },
     },
   ],

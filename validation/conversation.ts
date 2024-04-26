@@ -110,3 +110,8 @@ export const updateMessageSchema = Joi.object({
     .allow("")
     .meta({ swaggerType: "file" }),
 });
+export const readMessageSchema = Joi.object({
+  contactId: Joi.string().required().messages({
+    "any.requried": "Please enter contactor id",
+  }),
+});

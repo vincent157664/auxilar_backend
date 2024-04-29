@@ -1,3 +1,5 @@
+import { required } from "joi";
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -51,6 +53,7 @@ const ConversationSchema = new Schema({
       },
       message_body: {
         type: String,
+        required:false
       },
       parent_message_id: {
         type: Schema.Types.ObjectId,
@@ -70,6 +73,11 @@ const ConversationSchema = new Schema({
       },
       expire_date: {
         type: Date,
+      },
+      readStatus: {
+        type: Boolean,
+        default: true,
+        required: false,
       },
     },
   ],

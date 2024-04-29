@@ -496,12 +496,31 @@ export let proposalRoute = [
                 pipeline: [
                   {
                     $project: {
-                      "$expertData.avatar": 1,
-                      "$expertData.first_name": 1,
-                      "$expertData.last_name": 1,
-                      "$expertData.skills": 1,
-                      "$expertData.titleName": 1,
-                      "$expertData.majors": 1,
+                      _id: 1,
+                      avatar: 1,
+                      country: 1,
+                      hourly_rate: 1,
+                      titleName: 1,
+                      summary: 1,
+                      skills: 1,
+                      majors: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "proposals.expert.id",
+                foreignField: "_id",
+                as: "account",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: 1,
+                      first_name: 1,
+                      last_name: 1,
                     },
                   },
                 ],
@@ -511,6 +530,7 @@ export let proposalRoute = [
               $project: {
                 proposals: 1,
                 expertData: 1,
+                account: 1,
               },
             },
           ]);

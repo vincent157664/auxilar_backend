@@ -53,7 +53,7 @@ export const putMessageToConversationSchema = Joi.object({
       message_type: Joi.string().required().messages({
         "any.required": "Please provide message_type",
       }),
-      message_body: Joi.string().required().messages({
+      message_body: Joi.string().optional().messages({
         "any.required": "Please provide message_body",
       }),
       parent_message_id: Joi.string().allow(""),
@@ -109,4 +109,9 @@ export const updateMessageSchema = Joi.object({
     .allow(null)
     .allow("")
     .meta({ swaggerType: "file" }),
+});
+export const readMessageSchema = Joi.object({
+  contactId: Joi.string().required().messages({
+    "any.requried": "Please enter contactor id",
+  }),
 });

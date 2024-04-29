@@ -810,8 +810,6 @@ export let expertRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        const currentDate = new Date().toUTCString();
-
         // check whether account is client
         const account = await Account.findOne({
           email: request.auth.credentials.email,
@@ -823,33 +821,116 @@ export let expertRoute = [
         }
 
         const data = request.payload;
-        const queryAll = {};
-        if (data["skills"].length) queryAll["skills"] = { $in: data["skills"] };
-        if (data["majors"].length) queryAll["majors"] = { $in: data["majors"] };
-        if (data["email"]) queryAll["email"] = data["email"];
+        const keyword = data["keyword"];
+        const skills = data["skills"];
+        const languages = data["languages"];
+        let searchResult = [];
+        let uniqueResults = [];
+        const searchWords = keyword?.split(" ");
 
-        const findExperts = await Expert.aggregate([
-          {
-            $lookup: {
-              from: "accounts",
-              localField: "account",
-              foreignField: "_id",
-              as: "accountData",
-              pipeline: [
+        for (const word of searchWords) {
+          let query = [];
+          let objectParam = {};
+          let matchObject = {};
+
+          if (skills?.length !== 0) {
+            objectParam = {
+              skills: { $in: skills },
+            };
+            query.push(objectParam);
+          }
+          if (languages?.length !== 0) {
+            objectParam = { "languages.language": { $in: languages } };
+            query.push(objectParam);
+          }
+          if (word !== "") {
+            objectParam = {
+              $or: [
+                { summary: { $regex: word, $options: "i" } },
+                { titleName: { $regex: word, $options: "i" } },
                 {
-                  $project: {
-                    first_name: 1,
-                    last_name: 1,
+                  skills: {
+                    $elemMatch: {
+                      $regex: word,
+                      $options: "i",
+                    },
+                  },
+                },
+                {
+                  majors: {
+                    $elemMatch: {
+                      $regex: word,
+                      $options: "i",
+                    },
+                  },
+                },
+                {
+                  portfolios: {
+                    $elemMatch: {
+                      $or: [{ text: { $regex: word, $options: "i" } }],
+                    },
+                  },
+                },
+                { country: { $regex: word, $options: "i" } },
+                {
+                  education: {
+                    $elemMatch: {
+                      $or: [
+                        { course: { $regex: word, $options: "i" } },
+                        { subject: { $regex: word, $options: "i" } },
+                      ],
+                    },
+                  },
+                },
+                {
+                  certification: {
+                    $elemMatch: {
+                      $or: [
+                        { certificateName: { $regex: word, $options: "i" } },
+                        { subject: { $regex: word, $options: "i" } },
+                      ],
+                    },
                   },
                 },
               ],
+            };
+            query.push(objectParam);
+          }
+          query.push({ titleName: { $ne: null } });
+          if (query?.length !== 0) matchObject = { $and: query };
+
+          const experts = await Expert.aggregate([
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "account",
+                foreignField: "_id",
+                as: "accountData",
+                pipeline: [
+                  {
+                    $project: {
+                      first_name: 1,
+                      last_name: 1,
+                    },
+                  },
+                ],
+              },
             },
-          },
-          {
-            $match: queryAll,
-          },
-        ]);
-        return response.response({ status: "ok", data: findExperts }).code(200);
+            {
+              $match: matchObject,
+            },
+          ]);
+
+          searchResult.push(...experts);
+          const combinedResults = searchResult.flat();
+          uniqueResults = Array.from(
+            new Set(combinedResults.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+        }
+
+        return response
+          .response({ status: "ok", data: uniqueResults })
+          .code(200);
       } catch (err) {
         return response
           .response({

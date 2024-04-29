@@ -172,7 +172,16 @@ export const updateCertificationSchema = Joi.object({
 });
 
 export const findExpertSchema = Joi.object({
-  email: Joi.string().allow("").allow(null),
-  skills: Joi.array<String>().allow("").allow(null),
-  majors: Joi.array<String>().allow("").allow(null),
+  keyword: Joi.string().allow("").messages({
+    "any.required": "Please enter keyword",
+  }),
+  skills: Joi.array<String>().optional().messages({
+    "any.required": "Please enter skills",
+  }),
+  languages: Joi.array<String>().optional().messages({
+    "any.required": "Please enter languages information",
+  }),
+  experience: Joi.string().allow("").allow(null).messages({
+    "any.required": "Please enter experience in years",
+  }),
 });

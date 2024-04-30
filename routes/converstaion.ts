@@ -250,7 +250,14 @@ export let conversationRoute = [
                     $filter: {
                       input: "$messages",
                       as: "message",
-                      cond: { $eq: ["$$message.readStatus", false] },
+                      cond: {
+                        $and: [
+                          { $eq: ["$$message.readStatus", false] },
+                          {
+                            $ne: ["$$message.from", account?._id],
+                          },
+                        ],
+                      },
                     },
                   },
                 },
@@ -333,7 +340,14 @@ export let conversationRoute = [
                     $filter: {
                       input: "$messages",
                       as: "message",
-                      cond: { $eq: ["$$message.readStatus", false] },
+                      cond: {
+                        $and: [
+                          { $eq: ["$$message.readStatus", false] },
+                          {
+                            $ne: ["$$message.from", account?._id],
+                          },
+                        ],
+                      },
                     },
                   },
                 },
@@ -343,7 +357,7 @@ export let conversationRoute = [
             {
               $lookup: {
                 from: "accounts",
-                localField: "$document.client_id",
+                localField: "client_id",
                 foreignField: "_id",
                 as: "client_info",
                 pipeline: [
@@ -360,7 +374,7 @@ export let conversationRoute = [
             {
               $lookup: {
                 from: "accounts",
-                localField: "$document.expert_id",
+                localField: "expert_id",
                 foreignField: "_id",
                 as: "expert_info",
                 pipeline: [
@@ -377,7 +391,7 @@ export let conversationRoute = [
             {
               $lookup: {
                 from: "accounts",
-                localField: "$document.mentor_id",
+                localField: "mentor_id",
                 foreignField: "_id",
                 as: "mentor_info",
                 pipeline: [
@@ -416,7 +430,14 @@ export let conversationRoute = [
                     $filter: {
                       input: "$messages",
                       as: "message",
-                      cond: { $eq: ["$$message.readStatus", false] },
+                      cond: {
+                        $and: [
+                          { $eq: ["$$message.readStatus", false] },
+                          {
+                            $ne: ["$$message.from", account?._id],
+                          },
+                        ],
+                      },
                     },
                   },
                 },
@@ -532,42 +553,32 @@ export let conversationRoute = [
           }
         }
 
-        let isAllright: boolean = true;
-        switch (contactAccount.account_type) {
-          case "client": {
-            !client_id
-              ? (client_id = contactAccount._id)
-              : (isAllright = false);
-            break;
-          }
-          case "expert": {
-            !expert_id
-              ? (expert_id = contactAccount._id)
-              : (isAllright = false);
-            break;
-          }
-          case "mentor": {
-            !mentor_id
-              ? (mentor_id = contactAccount._id)
-              : (isAllright = false);
-            break;
-          }
-        }
-
-        // if myAccount.account_type === contactAccount.acount_type Conversation is not exist
-        if (!isAllright) {
-          return response
-            .response({ status: "err", err: "Conversation does not exist" })
-            .code(404);
-        }
-
-        // build query
-        const queryAll: object = {
+        const queryAll = {
           $and: [],
         };
-        if (client_id) queryAll["$and"].push({ client_id });
-        if (expert_id) queryAll["$and"].push({ expert_id });
-        if (mentor_id) queryAll["$and"].push({ mentor_id });
+
+        if (client_id) {
+          queryAll["$and"].push(
+            { client_id },
+            { expert_id: contactAccount._id }
+          );
+        }
+
+        if (expert_id) {
+          queryAll["$and"].push({ expert_id });
+          queryAll["$and"].push(
+            contactAccount.type === "mentor"
+              ? { mentor_id: contactAccount._id }
+              : { client_id: contactAccount._id }
+          );
+        }
+
+        if (mentor_id) {
+          queryAll["$and"].push(
+            { mentor_id },
+            { expert_id: contactAccount._id }
+          );
+        }
 
         const myConversation = await Conversation.aggregate([
           {
@@ -1343,7 +1354,6 @@ export let conversationRoute = [
           }
         }
 
-        // if myAccount.account_type === contactAccount.acount_type Conversation is not exist
         if (!isAllright) {
           return response
             .response({ status: "err", err: "Conversation does not exist" })
@@ -1356,20 +1366,115 @@ export let conversationRoute = [
         if (expert_id) queryAll["$and"].push({ expert_id });
         if (mentor_id) queryAll["$and"].push({ mentor_id });
 
-        const queryMessage = queryAll;
-        queryMessage["$and"].push({
-          "messages._id": request.params.messageId,
-        });
-
         let myMessage;
 
         try {
-          // Get my message in conversation
-          myMessage = await Conversation.findOneAndUpdate(
+          // Update the readStatus field in messages array
+          await Conversation.findOneAndUpdate(
             queryAll,
             { $set: { "messages.$[element].readStatus": true } },
-            { arrayFilters: [{ "element.readStatus": true }] }
+            {
+              arrayFilters: [
+                {
+                  $and: [
+                    { "element.readStatus": false },
+                    { "element.from": { $ne: myAccount._id } },
+                  ],
+                },
+              ],
+              multi: true,
+              new: true,
+            }
           );
+
+          // Aggregate operations on the updated documents
+          myMessage = await Conversation.aggregate([
+            {
+              $match: queryAll,
+            },
+            {
+              $project: {
+                mentor_id: 1,
+                client_id: 1,
+                expert_id: 1,
+                client_avatar: 1,
+                expert_avatar: 1,
+                mentor_avatar: 1,
+                "job.title": 1,
+                "job.id": 1,
+                "proposal.id": 1,
+                unreadMessagesCount: {
+                  $size: {
+                    $filter: {
+                      input: "$messages",
+                      as: "message",
+                      cond: {
+                        $and: [
+                          { $eq: ["$$message.readStatus", false] },
+                          {
+                            $ne: ["$$message.from", myAccount?._id],
+                          },
+                        ],
+                      },
+                    },
+                  },
+                },
+                lastMessage: { $arrayElemAt: ["$messages", -1] },
+              },
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "client_id",
+                foreignField: "_id",
+                as: "client_info",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: false,
+                      first_name: 1,
+                      last_name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "expert_id",
+                foreignField: "_id",
+                as: "expert_info",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: false,
+                      first_name: 1,
+                      last_name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              $lookup: {
+                from: "accounts",
+                localField: "mentor_id",
+                foreignField: "_id",
+                as: "mentor_info",
+                pipeline: [
+                  {
+                    $project: {
+                      _id: false,
+                      first_name: 1,
+                      last_name: 1,
+                    },
+                  },
+                ],
+              },
+            },
+            // Add additional lookup stages as needed
+          ]);
         } catch (err) {
           return response
             .response({ status: "err", err: "Message does not exist!" })

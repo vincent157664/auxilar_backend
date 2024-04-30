@@ -53,6 +53,7 @@ const ConversationSchema = new Schema({
       },
       message_body: {
         type: String,
+        required:false
       },
       parent_message_id: {
         type: Schema.Types.ObjectId,
@@ -75,6 +76,7 @@ const ConversationSchema = new Schema({
       },
       readStatus: {
         type: Boolean,
+        default: true,
         required: false,
       },
     },

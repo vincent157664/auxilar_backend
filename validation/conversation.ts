@@ -53,7 +53,7 @@ export const putMessageToConversationSchema = Joi.object({
       message_type: Joi.string().required().messages({
         "any.required": "Please provide message_type",
       }),
-      message_body: Joi.string().required().messages({
+      message_body: Joi.string().optional().messages({
         "any.required": "Please provide message_body",
       }),
       parent_message_id: Joi.string().allow(""),

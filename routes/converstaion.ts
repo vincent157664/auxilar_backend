@@ -526,7 +526,7 @@ export let conversationRoute = [
         });
 
         const contactAccount = await Account.findById(request.params.contactId);
-
+        console.log(contactAccount);
         if (!(myAccount && contactAccount)) {
           return response
             .response({ status: "err", err: "Account does not exist!" })
@@ -565,9 +565,9 @@ export let conversationRoute = [
         }
 
         if (expert_id) {
-          queryAll["$and"].push({ expert_id });
           queryAll["$and"].push(
-            contactAccount.type === "mentor"
+            { expert_id },
+            contactAccount.account_type === "mentor"
               ? { mentor_id: contactAccount._id }
               : { client_id: contactAccount._id }
           );

@@ -1,4 +1,7 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
+const fs = require("fs");
+const Joi = require("joi");
+const Path = require("path");
 import {
   ProfileSwagger,
   deleteProfileSwagger,
@@ -21,6 +24,7 @@ import {
 } from "../../validation/profile/mentor";
 import Account from "../../models/account";
 import Mentor from "../../models/profile/mentor";
+import mongoose from "mongoose";
 
 const options = { abortEarly: false, stripUnknown: true };
 
@@ -486,6 +490,111 @@ export let mentorRoute = [
             .code(404);
       } catch (error) {
         return response.response({ status: "err", err: error }).code(501);
+      }
+    },
+  },
+  {
+    method: "POST",
+    path: "/profile/upload",
+    config: {
+      auth: "jwt",
+      description: "Upload resume or CV of mentor",
+      payload: {
+        maxBytes: 10485760000,
+        output: "stream",
+        parse: true,
+        allow: "multipart/form-data",
+        multipart: { output: "stream" },
+      },
+      validate: {
+        payload: Joi.object({
+          file: Joi.array().allow(null).allow("").meta({ swaggerType: "file" }),
+        }),
+        failAction: (request, h, error) => {
+          return h.response({ err: error.message }).code(400).takeover();
+        },
+      },
+      handler: async (request: Request, response: ResponseToolkit) => {
+        try {
+          const data = request.payload;
+
+          data["file"].forEach(async (fileItem) => {
+            const bucketdb = mongoose.connection.db;
+            const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
+              bucketName: "messageFiles",
+            });
+
+            const attached_file = fileItem;
+
+            const uploadStream = bucket.openUploadStream(
+              attached_file.hapi.filename
+            );
+            uploadStream.on("finish", async (file) => {
+              //record attached_files info to database
+
+              const attachedMessage = await Mentor.findOneAndUpdate(
+                { account: request.auth.credentials.accountId },
+                {
+                  $set: {
+                    resume: {
+                      name: attached_file.hapi.filename,
+                      file_id: file._id,
+                    },
+                  },
+                }
+              );
+            });
+
+            await attached_file.pipe(uploadStream);
+          });
+          return response
+            .response({ message: "Resume uploaded successfully" })
+            .code(201);
+        } catch (error) {
+          return response
+            .response({ message: "File upload failed. Pleaes try again" })
+            .code(500);
+        }
+      },
+    },
+  },
+  {
+    method: "GET",
+    path: "/download/{fileId}",
+    options: {
+      auth: "jwt",
+      description: "download message file",
+      plugins: getProfileSwagger,
+      tags: ["api", "proposal"],
+    },
+    handler: async (request: Request, h) => {
+      try {
+        const currentDate = new Date().toUTCString();
+
+        const bucketdb = mongoose.connection.db;
+        const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
+          bucketName: "messageFiles",
+        });
+
+        const ObjectId = mongoose.Types.ObjectId;
+        let mime = require("mime-types");
+        let file = bucket.find({ _id: new ObjectId(request.params.fileId) });
+        let filename;
+        let contentType;
+        for await (const docs of file) {
+          filename = docs.filename;
+          contentType = mime.contentType(docs.filename);
+        }
+
+        const downloadStream = bucket.openDownloadStream(
+          new ObjectId(request.params.fileId)
+        );
+        return h
+          .response(downloadStream)
+          .header("Content-Type", contentType)
+          .header("Content-Disposition", "attachment; filename= " + filename);
+      } catch (err) {
+        return h.response({ status: "err", err: "Download failed" }).code(501);
       }
     },
   },

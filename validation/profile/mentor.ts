@@ -3,10 +3,6 @@ import Joi from "joi";
 export const ProfileSchema = Joi.object({
   avatar: Joi.string(),
 
-  birthday: Joi.date().required().messages({
-    "any.required": "Please provide birthday",
-  }),
-
   country: Joi.string().required().messages({
     "any.required": "Please provide country",
   }),

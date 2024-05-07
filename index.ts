@@ -13,6 +13,9 @@ import config from "./config";
 import connectDB from "./lib/dbConnect";
 import setRoutes from "./routes";
 import registerSocketServer from "./utils/socketServer";
+import Skill from "./models/skill";
+import Major from "./models/major";
+import Category from "./models/category";
 
 
 const vadliateAccount = async (decoded, request, h) => {
@@ -24,7 +27,7 @@ const init = async () => {
   await connectDB();
   const server: hapi.Server = new hapi.Server({
     port: 3030,
-    routes: { cors: { origin: ["*"], headers: ["Authorization"], credentials: true }, payload: { maxBytes: 9999999 } },
+    routes: { cors: { origin: ["*"] }, payload:{maxBytes:9999999} },
     host: "0.0.0.0",
   });
   await server.register(Inert);

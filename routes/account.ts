@@ -236,11 +236,7 @@ export let accountRoute = [
               err: "You account is disabled! Please contact auxilarorg@gmail.com.",
             })
             .code(404);
-        } else if (!account.verified_status) {
-          return response
-            .response({ err: "Email verify is required!" })
-            .code(402);
-        }
+        } 
 
         const isMatch = await bcrypt.compare(password, account.password);
         if (!isMatch) {

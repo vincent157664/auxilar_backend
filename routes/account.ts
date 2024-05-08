@@ -230,6 +230,13 @@ export let accountRoute = [
             .response({ err: "Email verify is required!" })
             .code(402);
         }
+        if (!account.active) {
+          return response
+            .response({
+              err: "You account is disabled! Please contact auxilarorg@gmail.com.",
+            })
+            .code(404);
+        } 
 
         const isMatch = await bcrypt.compare(password, account.password);
         if (!isMatch) {
@@ -245,7 +252,6 @@ export let accountRoute = [
         );
         const currentDate = new Date().toUTCString();
         account.last_logged_in = currentDate;
-        account.active = true;
         await account.save();
 
         return response.response({ token }).code(200);

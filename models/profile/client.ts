@@ -15,11 +15,6 @@ const ClientSchema = new Schema({
     type: String,
   },
 
-  birthday: {
-    type: Date,
-    required: true,
-  },
-
   country: {
     type: String,
     required: true,
@@ -106,12 +101,12 @@ const ClientSchema = new Schema({
   },
 
   payment_info: {
-    paypal : {
+    paypal: {
       type: String,
     },
-    creditCard : {
+    creditCard: {
       type: String,
-    }
+    },
   },
 });
 

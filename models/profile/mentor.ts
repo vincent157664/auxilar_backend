@@ -1,3 +1,5 @@
+import { required } from "joi";
+
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -13,11 +15,6 @@ const MentorSchema = new Schema({
 
   avatar: {
     type: String,
-  },
-
-  birthday: {
-    type: Date,
-    required: true,
   },
 
   country: {
@@ -62,13 +59,13 @@ const MentorSchema = new Schema({
     {
       expert: {
         expert_id: {
-          type: Schema.Types.ObjectId
+          type: Schema.Types.ObjectId,
         },
         jobs: {
-          type: [Schema.Types.ObjectId]
-        }
-      }
-    }
+          type: [Schema.Types.ObjectId],
+        },
+      },
+    },
   ],
 
   ongoing_project: [
@@ -106,6 +103,9 @@ const MentorSchema = new Schema({
     instagram: {
       type: String,
     },
+    webProfile: {
+      type: String,
+    },
   },
 
   account_status: {
@@ -118,24 +118,11 @@ const MentorSchema = new Schema({
     default: false,
   },
 
-  payment_info: {
-    paypal: {
-      type: String,
-    },
-    creditCard: {
-      type: String,
-    },
-  },
-
   professional_background: {
     type: String,
   },
 
   professional_info: {
-    major: {
-      type: String,
-      required: true,
-    },
     university: {
       type: String,
       required: true,
@@ -144,10 +131,10 @@ const MentorSchema = new Schema({
       type: String,
       required: true,
     },
-    graduate_at: {
-      type: Date,
-      required: true,
-    },
+  },
+  resume: {
+    type: Object,
+    required: false,
   },
 });
 

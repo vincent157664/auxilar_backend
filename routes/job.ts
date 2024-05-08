@@ -631,6 +631,25 @@ export let jobRoute = [
               aggregationStages.push(unwindParam);
             }
           }
+
+          const lookUpParams = {
+            $lookup: {
+              from: "accounts",
+              localField: "client_email",
+              foreignField: "email",
+              as: "clientName",
+              pipeline: [
+                {
+                  $project: {
+                    first_name: 1,
+                    last_name: 1,
+                  },
+                },
+              ],
+            },
+          };
+          aggregationStages.push(lookUpParams);
+
           if (hours_week.length !== 0) {
             objectParam = {
               hours_per_week: { $in: hours_week },

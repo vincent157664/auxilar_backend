@@ -1,7 +1,5 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-const fs = require("fs");
 const Joi = require("joi");
-const Path = require("path");
 import {
   ProfileSwagger,
   deleteProfileSwagger,
@@ -62,24 +60,22 @@ export let mentorRoute = [
         }
 
         const data = request.payload;
-        let birthday: Date = new Date("<yyyy-mm-dd>");
-        birthday = data["birthday"];
 
         const mentorField = {
           account: account.id,
           email: account.email,
-          avatar: data["avatar"] ?? null,
-          birthday: birthday,
-          country: data["country"],
-          state: data["state"] ?? null,
-          city: data["city"] ?? null,
-          address: data["address"],
-          languages: data["languages"],
-          summary: data["summary"],
-          social_media: data["social_media"] ?? null,
-          payment_verify: data["payment_verify"] ?? null,
-          payment_info: data["payment_info"] ?? null,
-          professional_info: data["professional_info"] ?? null,
+          avatar: data["mentor_profile"]["avatar"] ?? null,
+          country: data["mentor_profile"]["country"],
+          state: data["mentor_profile"]["state"] ?? null,
+          city: data["mentor_profile"]["city"] ?? null,
+          address: data["mentor_profile"]["address"],
+          languages: data["mentor_profile"]["languages"],
+          summary: data["mentor_profile"]["summary"],
+          social_media: data["mentor_profile"]["social_media"] ?? null,
+          payment_verify: data["mentor_profile"]["payment_verify"] ?? null,
+          payment_info: data["mentor_profile"]["payment_info"] ?? null,
+          professional_info:
+            data["mentor_profile"]["professional_info"] ?? null,
         };
 
         // const mentor = await Mentor.findOneAndUpdate(
@@ -100,6 +96,38 @@ export let mentorRoute = [
 
         const mentor = new Mentor(mentorField);
         await mentor.save();
+
+        if (data["file"]) {
+          data["file"].forEach(async (fileItem) => {
+            const bucketdb = mongoose.connection.db;
+            const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
+              bucketName: "messageFiles",
+            });
+
+            const attached_file = fileItem;
+
+            const uploadStream = bucket.openUploadStream(
+              attached_file?.hapi?.filename
+            );
+            uploadStream.on("finish", async (file) => {
+              //record attached_files info to database
+
+              await Mentor.findOneAndUpdate(
+                { account: request.auth.credentials.accountId },
+                {
+                  $set: {
+                    resume: {
+                      name: attached_file?.hapi?.filename,
+                      file_id: file._id,
+                    },
+                  },
+                }
+              );
+            });
+
+            await attached_file?.pipe(uploadStream);
+          });
+        }
 
         const responseData = await mentor.populate("account", [
           "firt_name",
@@ -532,7 +560,7 @@ export let mentorRoute = [
             uploadStream.on("finish", async (file) => {
               //record attached_files info to database
 
-              const attachedMessage = await Mentor.findOneAndUpdate(
+              await Mentor.findOneAndUpdate(
                 { account: request.auth.credentials.accountId },
                 {
                   $set: {
@@ -547,8 +575,14 @@ export let mentorRoute = [
 
             await attached_file.pipe(uploadStream);
           });
+          const updatedMentor = await Mentor.find({
+            account: request.auth.credentials.accountId,
+          });
           return response
-            .response({ message: "Resume uploaded successfully" })
+            .response({
+              message: "Resume uploaded successfully",
+              updatedMentor,
+            })
             .code(201);
         } catch (error) {
           return response

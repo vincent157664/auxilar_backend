@@ -47,7 +47,7 @@ export const ProposalSchema = Joi.object({
       "any.required": "Please provide total_amount.",
     }),
     mentors: Joi.array().allow(""),
-    milestones: Joi.array().items(milestone).required().messages({
+    milestones: Joi.array().optional().messages({
       "any.required": "Please provide milestones",
     }),
     proposal_status: Joi.number().allow(null),

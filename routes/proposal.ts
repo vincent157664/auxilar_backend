@@ -1195,6 +1195,7 @@ export let proposalRoute = [
               "proposals.$[proposal].proposal_status": 5, //proposal offered
               "proposals.$[proposal].mentor_check.$[mentorCheckId].checked":
                 true,
+              state: 2,
             },
           },
           {

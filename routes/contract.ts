@@ -44,6 +44,9 @@ export let contractRoute = [
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         });
+        const systemAccount = await Account.findOne({
+          email: "auxilarorg@gmail.com",
+        });
 
         if (account.account_type !== "client") {
           return response
@@ -82,12 +85,31 @@ export let contractRoute = [
 
         if (contract) {
           return response
-            .response({ stauts: "err", err: "Contract already exist!" })
+            .response({
+              stauts: "err",
+              err: "You have already hired this expert.",
+            })
             .code(409);
         }
 
         const newContract = new Contract(contractData);
         await newContract.save();
+        // if (data["milestones"].length !== 0) {
+        //   const totalBudget = data["milestones"].reduce(
+        //     (budget: number, milestone) => budget + milestone.amount,
+        //     0
+        //   );
+        //   account.balance -= totalBudget;
+        //   systemAccount.balance += totalBudget;
+        //   account.save();
+        //   systemAccount.save();
+        // } else 
+        {
+          account.balance -= data["total_budget"].proposed_budget;
+          systemAccount.balance += data["total_budget"].proposed_budget;
+          systemAccount.save();
+          account.save();
+        }
 
         // Add ongoing_project to expert
         await Expert.findOneAndUpdate(
@@ -117,6 +139,7 @@ export let contractRoute = [
           .response({ staus: "ok", data: "Contract successfully created!" })
           .code(201);
       } catch (err) {
+        console.log(err);
         return response
           .response({ staus: "err", err: "Creating contract failed!" })
           .code(501);

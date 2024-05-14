@@ -1,11 +1,13 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
 import {
+  completeContractSwagger,
   deleteContractSwagger,
   getContractSwagger,
   makeContractSwagger,
   updateContractSwagger,
 } from "../swagger/contract";
 import {
+  completeContractSchema,
   makeContractSchema,
   updateContractSchema,
 } from "../validation/contract";
@@ -73,6 +75,7 @@ export let contractRoute = [
           milestones: data["milestones"],
           additional_information: data["additional_information"] ?? null,
           total_budget: data["total_budget"],
+          paymentTerms: data["paymentTerms"],
         };
 
         // check whether contract exist
@@ -94,17 +97,16 @@ export let contractRoute = [
 
         const newContract = new Contract(contractData);
         await newContract.save();
-        // if (data["milestones"].length !== 0) {
-        //   const totalBudget = data["milestones"].reduce(
-        //     (budget: number, milestone) => budget + milestone.amount,
-        //     0
-        //   );
-        //   account.balance -= totalBudget;
-        //   systemAccount.balance += totalBudget;
-        //   account.save();
-        //   systemAccount.save();
-        // } else 
-        {
+        if (data["milestones"].length !== 0) {
+          const totalBudget = data["milestones"].reduce(
+            (budget: number, milestone) => budget + milestone.amount,
+            0
+          );
+          account.balance -= totalBudget;
+          systemAccount.balance += totalBudget;
+          account.save();
+          systemAccount.save();
+        } else {
           account.balance -= data["total_budget"].proposed_budget;
           systemAccount.balance += data["total_budget"].proposed_budget;
           systemAccount.save();
@@ -138,6 +140,118 @@ export let contractRoute = [
         return response
           .response({ staus: "ok", data: "Contract successfully created!" })
           .code(201);
+      } catch (err) {
+        console.log(err);
+        return response
+          .response({ staus: "err", err: "Creating contract failed!" })
+          .code(501);
+      }
+    },
+  },
+  {
+    method: "POST",
+    path: "/complete",
+    options: {
+      auth: "jwt",
+      description: "Complete contract",
+      plugins: completeContractSwagger,
+      tags: ["api", "contract"],
+      validate: {
+        payload: completeContractSchema,
+        options,
+        failAction: (request, h, error) => {
+          const details = error.details.map((d) => {
+            return { err: d.message, path: d.path };
+          });
+          return h.response(details).code(400).takeover();
+        },
+      },
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const currentDate = new Date().toUTCString();
+
+        // check wheter account is client
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
+        });
+        const systemAccount = await Account.findOne({
+          email: "auxilarorg@gmail.com",
+        });
+
+        if (account.account_type !== "client") {
+          return response
+            .response({ status: "err", err: "Forbidden request!" })
+            .code(403);
+        }
+
+        // Get contract data
+        const data = request.payload;
+
+        // Check wheter expert exist
+        const expert = await Expert.findOne({ account: data["expert_id"] });
+        if (!expert) {
+          return response
+            .response({ status: "err", err: "Expert doesn't exist" })
+            .code(404);
+        }
+
+        // check whether contract exist
+        const contract = await Contract.findOne({
+          job: data["job"],
+          client_id: account._id,
+          expert_id: data["expert_id"],
+        });
+
+        if (!contract) {
+          return response
+            .response({
+              stauts: "err",
+              err: "You don't have created this contract.",
+              code: 409,
+            })
+            .code(404);
+        }
+        if (contract.status === "Completed") {
+          return response
+            .response({
+              stauts: "err",
+              err: "Contract already completed.",
+              code: 404,
+            })
+            .code(409);
+        }
+        if (contract.paymentTerms === "Fixed") {
+          systemAccount.balance -= contract.total_amount.proposed_budget * 0.8;
+          expert.balance += contract.total_amount.proposed_budget * 0.8;
+          systemAccount.save();
+          expert.save();
+        } else if (contract.paymentTerms === "Hourly") {
+          if (account.balance < data["budget"]) {
+            return response
+              .response({
+                message: "Low balance",
+                err: "You do not have sufficient balance",
+                code: 402,
+              })
+              .code(402);
+          } else {
+            account.balance -= data["budget"] * 0.8;
+            expert.balance += data["budget"] * 0.8;
+            systemAccount.balance += data["budget"] * 0.2;
+            account.save();
+            expert.save();
+            systemAccount.save();
+          }
+        }
+        contract.status = "Completed";
+        contract.save();
+        return response
+          .response({
+            message: "Contract Completed Successfully",
+            data: contract,
+          })
+          .code(200);
       } catch (err) {
         console.log(err);
         return response

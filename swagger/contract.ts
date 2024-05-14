@@ -23,6 +23,31 @@ export const makeContractSwagger = {
     },
   },
 };
+export const completeContractSwagger = {
+  "hapi-swagger": {
+    responses: {
+      200: {
+        description: "Contract completed successfully!",
+      },
+      400: {
+        description: "Input Fields Required.",
+      },
+      403: {
+        description: "Forbidden request.",
+      },
+      404: {
+        description: "Not found!",
+      },
+      409: {
+        description: "Contract already exist!",
+      },
+      501: {
+        description:
+          "Sorry, something went wrong. Please refresh the page and try again.",
+      },
+    },
+  },
+};
 export const getContractSwagger = {
   "hapi-swagger": {
     responses: {

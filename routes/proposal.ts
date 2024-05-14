@@ -1400,7 +1400,7 @@ export let proposalRoute = [
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         });
-        if (account.account_type !== "expert") {
+        if (account.account_type !== "client") {
           return response
             .response({ status: "err", err: "Forbidden request" })
             .code(403);
@@ -1408,17 +1408,11 @@ export let proposalRoute = [
         // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
-              "proposals.$[proposal].proposal_status": 6, //proposal hired
+              "proposals.$[proposal].proposal_status": 6, //contract completed
               "proposals.$[proposal].mentor_check.$[mentorCheckId].checked":
                 true,
               state: 3,
@@ -1480,7 +1474,6 @@ export let proposalRoute = [
             },
           },
         ]);
-
 
         return response
           .response({ status: "ok", data: approvedProposal })

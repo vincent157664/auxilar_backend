@@ -13,9 +13,6 @@ import config from "./config";
 import connectDB from "./lib/dbConnect";
 import setRoutes from "./routes";
 import registerSocketServer from "./utils/socketServer";
-import Skill from "./models/skill";
-import Major from "./models/major";
-import Category from "./models/category";
 
 
 const vadliateAccount = async (decoded, request, h) => {

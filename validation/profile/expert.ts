@@ -35,6 +35,9 @@ export const ProfileSchema = Joi.object({
   summary: Joi.string().required().messages({
     "any.requird": "Please provide summary",
   }),
+  titleName: Joi.string().required().messages({
+    "any.requird": "Please provide tag line",
+  }),
 
   verified_by: Joi.array<object>(),
 
@@ -162,9 +165,23 @@ export const updateEducationSchema = Joi.object({
     "any.required": "Please provide education",
   }),
 });
+export const updateCertificationSchema = Joi.object({
+  certification: Joi.array().required().messages({
+    "any.required": "Please provide education",
+  }),
+});
 
 export const findExpertSchema = Joi.object({
-  email: Joi.string().allow("").allow(null),
-  skills: Joi.array<String>().allow("").allow(null),
-  majors: Joi.array<String>().allow("").allow(null),
+  keyword: Joi.string().allow("").messages({
+    "any.required": "Please enter keyword",
+  }),
+  skills: Joi.array<String>().optional().messages({
+    "any.required": "Please enter skills",
+  }),
+  languages: Joi.array<String>().optional().messages({
+    "any.required": "Please enter languages information",
+  }),
+  experience: Joi.string().allow("").allow(null).messages({
+    "any.required": "Please enter experience in years",
+  }),
 });

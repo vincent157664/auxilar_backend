@@ -236,7 +236,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -322,7 +325,10 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -352,7 +358,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -407,7 +416,10 @@ export let jobRoute = [
         }
       } catch (error) {
         return response
-          .response({ status: "err", err: "Request not implemented!" })
+          .response({
+            status: "err",
+            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -465,161 +477,218 @@ export let jobRoute = [
         const jobs_per_page = data["jobs_per_page"] as number;
         const page_index = data["page_index"] as number;
         const sortBy = data["sortBy"];
-        let query = [];
-        let objectParam = {};
-        let matchObject = {};
-        let lookupParam = {};
-        let unwindParam = { $unwind: "$clientData" };
-        let aggregationStages = [];
-        const pageCriteria = {
-          $skip: jobs_per_page * (page_index - 1),
-        };
-        const indexCriteria = {
-          $limit: jobs_per_page,
-        };
-
-        if (skill_set.length !== 0) {
-          objectParam = { skill_set: { $in: skill_set } };
-          query.push(objectParam);
-        }
-        if (title !== "") {
-          objectParam = {
-            $or: [
-              { title: { $regex: title, $options: "i" } },
-              { description: { $regex: title, $options: "i" } },
-            ],
+        const searchWords = title.split(" ");
+        let uniqueResults = [];
+        for (const word of searchWords) {
+          let searchResults = [];
+          let query = [];
+          let objectParam = {};
+          let matchObject = {};
+          let lookupParam = {};
+          let unwindParam = { $unwind: "$clientData" };
+          let aggregationStages = [];
+          const pageCriteria = {
+            $skip: jobs_per_page * (page_index - 1),
           };
-          query.push(objectParam);
-        }
-        if (category.length !== 0) {
-          objectParam = { category: { $in: category } };
-          query.push(objectParam);
-        }
-        if (budget_type !== null) {
-          objectParam = {
-            $or: [
-              {
-                $and: [
-                  { budget_type: 0 },
-                  budget_type.fixed.fixed_range.length > 0
-                    ? {
-                        $or: budget_type.fixed.fixed_range.map((range) => ({
-                          budget_amount: {
-                            $gte: range.min_value,
-                            $lte: range.max_value,
-                          },
-                        })),
-                      }
-                    : {},
-                ],
-              },
-              {
-                $and: [
-                  { budget_type: 1 },
-                  budget_type.hourly.hourly_range.length > 0
-                    ? {
-                        budget_amount: {
-                          $gte: budget_type.hourly.hourly_range[0],
-                          $lte: budget_type.hourly.hourly_range[1],
-                        },
-                      }
-                    : {},
-                ],
-              },
-            ],
+          const indexCriteria = {
+            $limit: jobs_per_page,
           };
-          console.log(objectParam);
-          query.push(objectParam);
-        }
-        if (clientInfo !== null) {
-          if (clientInfo.payment_verified === true) {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      payment_verify: 1,
-                    },
-                  },
-                ],
-              },
-            };
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
-          } else if (clientInfo.payment_unverified === true) {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      payment_verify: 0,
-                    },
-                  },
-                ],
-              },
-            };
 
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
-          } else {
-            lookupParam = {
-              $lookup: {
-                from: "clients",
-                localField: "client",
-                foreignField: "_id",
-                as: "clientData",
-                pipeline: [
-                  {
-                    $project: {
-                      "client.payment_verify": { $or: [0, 1] },
-                    },
-                  },
-                ],
-              },
+          if (skill_set.length !== 0) {
+            objectParam = {
+              skill_set: { $in: skill_set },
             };
-
-            aggregationStages.push(lookupParam);
-            aggregationStages.push(unwindParam);
+            query.push(objectParam);
           }
-        }
-        if (hours_week.length !== 0) {
-          objectParam = {
-            hours_per_week: { $in: hours_week },
-          };
-          query.push(objectParam);
-        }
-        if (project_duration.length !== 0) {
-          objectParam = {
-            project_duration: { $in: project_duration },
-          };
-          query.push(objectParam);
-        }
-        if (query.length !== 0) matchObject = { $and: query };
-        console.log("query", query);
-        aggregationStages.push({ $match: matchObject });
 
-        if (sortBy === "Relevance") {
-          aggregationStages.unshift({
-            $project: {
-              score: { $meta: "textScore" },
+          if (word !== "") {
+            objectParam = {
+              $or: [
+                { title: { $regex: word, $options: "i" } },
+                { description: { $regex: word, $options: "i" } },
+                {
+                  skills: {
+                    $elemMatch: {
+                      $regex: word,
+                      $options: "i",
+                    },
+                  },
+                },
+
+                { country: { $regex: word, $options: "i" } },
+                { state: { $regex: word, $options: "i" } },
+                { address: { $regex: word, $options: "i" } },
+                { city: { $regex: word, $options: "i" } },
+                {
+                  "languages.language": { $regex: word, $options: "i" },
+                },
+                { "portfolios.text": { $regex: word, $options: "i" } },
+              ],
+            };
+            query.push(objectParam);
+          }
+          if (category.length !== 0) {
+            objectParam = {
+              category: { $in: category },
+            };
+            query.push(objectParam);
+          }
+          if (budget_type !== null) {
+            const fixedBudgetQueries = budget_type.fixed.fixed_range.map(
+              (range) => ({
+                budget_amount: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const hourlyBudgetQueries = budget_type.hourly.hourly_range.map(
+              (range) => ({
+                hourly_rate: {
+                  $gte: range.min_value,
+                  $lte: range.max_value,
+                },
+              })
+            );
+            const objectParam = {
+              $or: [
+                {
+                  $and: [
+                    { budget_type: 0 },
+                    budget_type.fixed.fixed_range.length > 0
+                      ? { $or: fixedBudgetQueries }
+                      : {},
+                  ],
+                },
+                {
+                  $and: [
+                    { budget_type: 1 },
+                    budget_type.hourly.hourly_range.length > 0
+                      ? { $or: hourlyBudgetQueries }
+                      : {},
+                  ],
+                },
+              ],
+            };
+            query.push(objectParam);
+          }
+          if (clientInfo !== null) {
+            if (clientInfo.payment_verified === true) {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        payment_verify: 1,
+                      },
+                    },
+                  ],
+                },
+              };
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            } else if (clientInfo.payment_unverified === true) {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        payment_verify: 0,
+                      },
+                    },
+                  ],
+                },
+              };
+
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            } else {
+              lookupParam = {
+                $lookup: {
+                  from: "clients",
+                  localField: "client",
+                  foreignField: "_id",
+                  as: "clientData",
+                  pipeline: [
+                    {
+                      $project: {
+                        "client.payment_verify": { $or: [0, 1] },
+                      },
+                    },
+                  ],
+                },
+              };
+
+              aggregationStages.push(lookupParam);
+              aggregationStages.push(unwindParam);
+            }
+          }
+
+          const lookUpParams = {
+            $lookup: {
+              from: "accounts",
+              localField: "client_email",
+              foreignField: "email",
+              as: "clientName",
+              pipeline: [
+                {
+                  $project: {
+                    first_name: 1,
+                    last_name: 1,
+                  },
+                },
+              ],
             },
-          });
-          aggregationStages.push({ $sort: { score: { $meta: "textScore" } } });
-        } else if (sortBy === "Latest") {
-          aggregationStages.push({ $sort: { "job.pub_date": -1 } });
-        }
-        console.log(aggregationStages);
-        const findedjobs = await Job.aggregate(aggregationStages).exec();
+          };
+          aggregationStages.push(lookUpParams);
 
-        return response.response({ status: "ok", data: findedjobs }).code(200);
+          if (hours_week.length !== 0) {
+            objectParam = {
+              hours_per_week: { $in: hours_week },
+            };
+            query.push(objectParam);
+          }
+          if (project_duration.length !== 0) {
+            objectParam = {
+              project_duration: { $in: project_duration },
+            };
+            query.push(objectParam);
+          }
+          if (query.length !== 0) matchObject = { $and: query };
+          aggregationStages.push({ $match: matchObject });
+
+          if (sortBy === "Relevance") {
+            aggregationStages.unshift({
+              $project: {
+                score: { $meta: "textScore" },
+              },
+            });
+            aggregationStages.push({
+              $sort: { score: { $meta: "textScore" } },
+            });
+          } else if (sortBy === "Latest") {
+            aggregationStages.push({ $sort: { "job.pub_date": -1 } });
+          }
+          aggregationStages.push(pageCriteria);
+          aggregationStages.push(indexCriteria);
+          const findedjobs = await Job.aggregate(aggregationStages).exec();
+          searchResults.push([...findedjobs]);
+          const combinedResults = searchResults.flat();
+          uniqueResults = Array.from(
+            new Set(combinedResults.map((obj) => JSON.stringify(obj)))
+          ).map((str) => JSON.parse(str));
+        }
+        return response
+          .response({ status: "ok", data: uniqueResults })
+          .code(200);
       } catch (error) {
         console.log(error);
         return response.response({ status: "err", err: error }).code(501);
@@ -710,7 +779,10 @@ export let jobRoute = [
           .code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },
@@ -769,7 +841,10 @@ export let jobRoute = [
         return response.response({ status: "ok", data: findExperts }).code(200);
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Sorry, something went wrong. Please refresh the page and try again.!",
+          })
           .code(501);
       }
     },

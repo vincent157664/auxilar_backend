@@ -11,7 +11,8 @@ export const ProfileSwagger = {
         description: "Forbidden request",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -26,7 +27,8 @@ export const getProfileSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -41,7 +43,8 @@ export const updateBaseInfoSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -56,7 +59,8 @@ export const updateSummarySwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -71,7 +75,8 @@ export const updatePortfolioSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -86,7 +91,8 @@ export const updatePortfolioItemSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -101,7 +107,8 @@ export const deletePortfolioItemSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -116,7 +123,8 @@ export const addPortfolioItemSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -131,7 +139,8 @@ export const updateVerifierSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -146,7 +155,8 @@ export const updateResumeSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -161,7 +171,8 @@ export const updatePersonDetailSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -176,7 +187,8 @@ export const updateEducationSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Request not implemented.",
+        description:
+          "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -191,7 +203,8 @@ export const deleteProfileSwagger = {
         description: "Profile not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -213,7 +226,8 @@ export const findExpertSwagger = {
         description: "Expert is not found!",
       },
       501: {
-        description: "Requeset not implemented.",
+        description:
+          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
     },
   },

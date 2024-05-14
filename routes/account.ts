@@ -104,8 +104,8 @@ export let accountRoute = [
           border:2px solid rgb(0,123,168);border-radius:100px;min-width:230px;color:rgba(255,255,255,1);
           white-space:nowrap;font-weight:normal;display:block;font-family:Helvetica,Arial,sans-serif;
           font-size:16px;line-height:40px;text-align:center;text-decoration:none"
-          href="http://195.201.56.175:3000/account/verify-email/${token}" target="_blank"
-          data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/verify-email/${token}">
+          href="https://auxilar.org/account/verify-email/${token}" target="_blank"
+          data-saferedirecturl="https://www.google.com/url?q="https://auxilar.org/account/verify-email/${token}">
           Verify Email</a></div></td></tr></tbody></table></td></tr><tr>
           <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
           padding-left:20px;padding-right:20px;padding-top:20px">
@@ -114,6 +114,37 @@ export let accountRoute = [
           <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
           padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
           Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
+        // const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
+        // <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        // <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
+        // <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
+        // </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
+        // font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
+        // Verify your email address to complete registration</h2></td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">Hi ${request.payload["first_name"]} ${request.payload["last_name"]} , </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">
+        // Thanks for your interest in joining Auxilar! To complete your registration, we need you to
+        //  verify your email address. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
+        //  font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
+        //   width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
+        //   <tr><td><div style="text-align:center;margin:0 auto"><a style="background-color:rgb(27,158,197);
+        //   border:2px solid rgb(0,123,168);border-radius:100px;min-width:230px;color:rgba(255,255,255,1);
+        //   white-space:nowrap;font-weight:normal;display:block;font-family:Helvetica,Arial,sans-serif;
+        //   font-size:16px;line-height:40px;text-align:center;text-decoration:none"
+        //   href="http://195.201.56.175/account/verify-email/${token}" target="_blank"
+        //   data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175/account/verify-email/${token}">
+        //   Verify Email</a></div></td></tr></tbody></table></td></tr><tr>
+        //   <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:20px">
+        //   Please note that not all applications to join Auxilar are accepted.
+        //   We will notify you of our decision by email within 24 hours. </td></tr>
+        //   <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
+        //   Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
         sendMail(email, content);
         return response
@@ -139,7 +170,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const decoded = Jwt.decode(request.params.token);
         const account = new Account(decoded.newAccount);
         account.verified_status = true;
@@ -181,9 +211,7 @@ export let accountRoute = [
         failAction: (request, h, error) => {
           const details = error.details.map((d) => {
             return {
-              // message: d.message,
               err: d.message,
-              // path: d.path,
             };
           });
           return h.response(details).code(400).takeover();
@@ -192,8 +220,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
-
         const email = request.payload["email"];
         const password = request.payload["password"];
         const account = await Account.findOne({ email });
@@ -204,6 +230,13 @@ export let accountRoute = [
             .response({ err: "Email verify is required!" })
             .code(402);
         }
+        if (!account.active) {
+          return response
+            .response({
+              err: "You account is disabled! Please contact auxilarorg@gmail.com.",
+            })
+            .code(404);
+        } 
 
         const isMatch = await bcrypt.compare(password, account.password);
         if (!isMatch) {
@@ -219,7 +252,6 @@ export let accountRoute = [
         );
         const currentDate = new Date().toUTCString();
         account.last_logged_in = currentDate;
-        account.active = true;
         await account.save();
 
         return response.response({ token }).code(200);
@@ -240,7 +272,6 @@ export let accountRoute = [
 
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const account = await Account.findOne({
           email: request.auth.credentials.email,
         }).select("-password");
@@ -283,12 +314,11 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-    
         const new_Password = request.payload["new_password"];
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-    
+
         const hash = await bcrypt.hash(new_Password, 10);
         account.password = hash;
         await account.save();
@@ -363,32 +393,60 @@ export let accountRoute = [
         //                 Thanks for your time,
         //                 The Auxilar Team`;
         const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
-      <table border="0" cellpadding="0" cellspacing="0" width="100%">
-      <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
-      <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
-      </td></tr>
-      <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
-      font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
-      Update Password</h2></td></tr>
-      <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
-      <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-      padding-left:20px;padding-right:20px;padding-top:20px">
-      Thanks for your interest in Auxilar! To complete your password update, we need you to
-       reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
-       font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
-        width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
-        <tr><td><div style="text-align:center;margin:0 auto">
-        data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
-        passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
-        <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        padding-left:20px;padding-right:20px;padding-top:20px">
-        Please note that not all applications to join Auxilar are accepted.
-        We will notify you of our decision by email within 24 hours. </td></tr>
+        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
+        <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
+        </td></tr>
         <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
-        Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
+        padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
+        font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
+        Update Password</h2></td></tr>
+        <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
+        <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        padding-left:20px;padding-right:20px;padding-top:20px">
+        Thanks for your interest in Auxilar! To complete your password update, we need you to
+         reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
+         font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
+          width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
+          <tr><td><div style="text-align:center;margin:0 auto">
+          data-saferedirecturl="https://www.google.com/url?q="https://auxilar.org/account/reset-password">
+          passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
+          <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+          padding-left:20px;padding-right:20px;padding-top:20px">
+          Please note that not all applications to join Auxilar are accepted.
+          We will notify you of our decision by email within 24 hours. </td></tr>
+          <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+          padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
+          Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
+
+        //   const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
+        // <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        // <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
+        // <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
+        // </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
+        // font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
+        // Update Password</h2></td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
+        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        // padding-left:20px;padding-right:20px;padding-top:20px">
+        // Thanks for your interest in Auxilar! To complete your password update, we need you to
+        //  reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
+        //  font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
+        //   width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
+        //   <tr><td><div style="text-align:center;margin:0 auto">
+        //   data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
+        //   passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
+        //   <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:20px">
+        //   Please note that not all applications to join Auxilar are accepted.
+        //   We will notify you of our decision by email within 24 hours. </td></tr>
+        //   <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
+        //   padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
+        //   Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
         const emailParams = {
           Source: "galaxydragon0702@gmail.com",
@@ -487,7 +545,6 @@ export let accountRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-
         const decodedtoken = Jwt.decode(request.params.token);
         const passcode = await Passcode.findOne({
           email: decodedtoken.passcode.email,
@@ -602,6 +659,16 @@ export let accountRoute = [
                       _id: false,
                       first_name: 1,
                       last_name: 1,
+                      country: "$account_info.country",
+                      state: "$account_info.state",
+                      city: "$account_info.city",
+                      languages: "$account_info.languages",
+                      avatar: "$account_info.avatar",
+                      hourly_rate: "$account_info.hourly_rate",
+                      summary: "$account_info.summary",
+                      titleName: "$account_info.titleName",
+                      skills: "$account_info.skills",
+                      majors: "$account_info.majors",
                     },
                   },
                 ],
@@ -623,6 +690,10 @@ export let accountRoute = [
                       _id: false,
                       first_name: 1,
                       last_name: 1,
+                      country: "$account_info.country",
+                      avatar: "$account_info.avatar",
+                      summary: "$account_inf0.summary",
+                      profesionalInfo: "$account_info.professional_info",
                     },
                   },
                 ],
@@ -639,7 +710,10 @@ export let accountRoute = [
         return response.response({ status: "ok", data: accountProfile });
       } catch (err) {
         return response
-          .response({ status: "err", err: "Not implemented!" })
+          .response({
+            status: "err",
+            err: "Getting profile failed. Please try again!",
+          })
           .code(501);
       }
     },

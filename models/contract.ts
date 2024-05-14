@@ -1,3 +1,5 @@
+import { required } from "joi";
+
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
@@ -54,6 +56,14 @@ const ContractSchema = new Schema({
     proposed_budget: {
       type: Number,
     },
+  },
+  paymentTerms: {
+    type: String,
+    required: false,
+  },
+  status: {
+    type: String,
+    required: false,
   },
 });
 

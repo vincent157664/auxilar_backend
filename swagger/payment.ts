@@ -8,7 +8,8 @@ export const performPaymentSwagger = {
         description: "Input Fields Required.",
       },
       501: {
-        description: "Not implemented",
+        description:
+          "Sorry, something went wrong. Please refresh the page and try again.",
       },
     },
   },

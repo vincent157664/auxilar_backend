@@ -15,8 +15,8 @@ export const makeContractSchema = Joi.object({
   job: Joi.string().required().messages({
     "any.required": "Please provide job id",
   }),
-  proposal: Joi.string().required().messages({
-    "any.required": "Please provide proposal id",
+  client_id: Joi.string().required().messages({
+    "any.required": "Please provide client id",
   }),
   expert_id: Joi.string().required().messages({
     "any.required": "Please provide expert id",
@@ -26,6 +26,24 @@ export const makeContractSchema = Joi.object({
   total_budget: Joi.object({
     proposed_budget: Joi.number(),
   }),
+  paymentTerms: Joi.optional().allow("").messages({
+    "any.required": "Please provide paymentTerms.",
+  }),
+});
+
+export const completeContractSchema = Joi.object({
+  job: Joi.string().required().messages({
+    "any.required": "Please provide job id",
+  }),
+  client_id: Joi.string().required().messages({
+    "any.required": "Please provide client id",
+  }),
+  expert_id: Joi.string().required().messages({
+    "any.required": "Please provide expert id",
+  }),
+  budget: Joi.number().required().messages({
+    "any.required": "Please provide budget",
+  }),
 });
 
 export const updateContractSchema = Joi.object({
@@ -33,5 +51,8 @@ export const updateContractSchema = Joi.object({
   milestones: Joi.array().items(milestone).allow(""),
   total_budget: Joi.object({
     proposed_budget: Joi.number(),
+  }),
+  paymentTerms: Joi.optional().allow("").messages({
+    "any.required": "Please provide paymentTerms.",
   }),
 });

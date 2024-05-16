@@ -103,11 +103,13 @@ export let contractRoute = [
             0
           );
           account.balance -= totalBudget;
+          account.totlaEarning += totalBudget;
           systemAccount.balance += totalBudget;
           await account.save();
           await systemAccount.save();
         } else {
           account.balance -= data["total_budget"].proposed_budget;
+          account.totlaEarning += data["total_budget"].proposed_budget;
           systemAccount.balance += data["total_budget"].proposed_budget;
           await systemAccount.save();
           await account.save();
@@ -232,12 +234,15 @@ export let contractRoute = [
             );
             systemAccount.balance -= totalBudget * 0.9;
             expertAccount.balance += totalBudget * 0.9;
+            expertAccount.totlaEarning += totalBudget * 0.9;
             await account.save();
             await systemAccount.save();
           } else {
             systemAccount.balance -=
               contract.total_budget.proposed_budget * 0.9;
             expertAccount.balance +=
+              contract.total_budget.proposed_budget * 0.9;
+            expertAccount.totlaEarning +=
               contract.total_budget.proposed_budget * 0.9;
             await systemAccount.save();
             await expertAccount.save();
@@ -254,6 +259,7 @@ export let contractRoute = [
           } else {
             account.balance -= data["budget"] * 0.9;
             expertAccount.balance += data["budget"] * 0.9;
+            expertAccount.totlaEarning += data["budget"] * 0.9;
             systemAccount.balance += data["budget"] * 0.2;
             await account.save();
             await expertAccount.save();
@@ -505,7 +511,7 @@ export let contractRoute = [
           client_id: request.auth.credentials.accountId,
           expert_id: request.params.expertId,
         });
-        if (!deletedContract.deletedCount) {
+        if (!deletedContract) {
           return response
             .response({ stauts: "err", err: "Contract doesn't exist" })
             .code(404);

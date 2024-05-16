@@ -140,6 +140,12 @@ const JobSchema = new Schema({
           mentor: {
             type: String,
           },
+          mentorFirstName: {
+            type: String,
+          },
+          mentorLastName: {
+            type: String,
+          },
           checked: {
             type: Boolean,
             default: 0, // 0: not check or not apply mentor, 1: mentor check

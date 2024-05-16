@@ -949,9 +949,14 @@ export let proposalRoute = [
           },
           {
             $set: {
-              "proposals.$[proposal].proposal_status": 2, //pending : approve
+              "proposals.$[proposal].proposal_status": 2, //proposal offered
               "proposals.$[proposal].mentor_check.$[mentorCheckId].checked":
                 true,
+              "proposals.$[proposal].mentor_check.$[mentorCheckId].mentorFirstName":
+                account.first_name,
+              "proposals.$[proposal].mentor_check.$[mentorCheckId].mentorLastName":
+                account.last_name,
+              state: 1,
             },
           },
           {
@@ -979,16 +984,12 @@ export let proposalRoute = [
             },
           },
         ]);
-        // } catch (err) {
-        //   return response
-        //     .response({ status: "err", err: "Applied proposal Not found!" })
-        //     .code(404);
-        // }
 
         return response
           .response({ status: "ok", data: approvedProposal })
           .code(200);
       } catch (err) {
+        console.log(err);
         return response
           .response({ status: "err", err: "Approve failed!" })
           .code(501);
@@ -1020,13 +1021,7 @@ export let proposalRoute = [
         // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
@@ -1060,11 +1055,6 @@ export let proposalRoute = [
             },
           },
         ]);
-        // } catch (err) {
-        //   return response
-        //     .response({ status: "err", err: "Applied proposal Not found!" })
-        //     .code(404);
-        // }
 
         return response
           .response({ status: "ok", data: approvedProposal })
@@ -1101,13 +1091,7 @@ export let proposalRoute = [
         // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
@@ -1141,11 +1125,6 @@ export let proposalRoute = [
             },
           },
         ]);
-        // } catch (err) {
-        //   return response
-        //     .response({ status: "err", err: "Applied proposal Not found!" })
-        //     .code(404);
-        // }
 
         return response
           .response({ status: "ok", data: approvedProposal })
@@ -1182,13 +1161,7 @@ export let proposalRoute = [
         // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
@@ -1292,16 +1265,9 @@ export let proposalRoute = [
             .response({ status: "err", err: "Forbidden request" })
             .code(403);
         }
-        // try {
         await Job.findOneAndUpdate(
           {
-            $and: [
-              { _id: request.params.jobId },
-              // { "proposals._id": request.params.proposalId },
-              // {
-              //   "proposals.mentor_check.mentor": account.email,
-              // },
-            ],
+            $and: [{ _id: request.params.jobId }],
           },
           {
             $set: {
@@ -1349,7 +1315,7 @@ export let proposalRoute = [
           },
           {
             $push: {
-              ongoing_project: { project: request.params.jobId },
+              ongoing_project: { project: new ObjectId(request.params.jobId) },
             },
           }
         );
@@ -1367,11 +1333,193 @@ export let proposalRoute = [
             },
           },
         ]);
-        // } catch (err) {
+        return response
+          .response({ status: "ok", data: approvedProposal })
+          .code(200);
+      } catch (err) {
+        return response
+          .response({ status: "err", err: "Approve failed!" })
+          .code(501);
+      }
+    },
+  },
+  {
+    method: "PUT",
+    path: "/{jobId}/cancel/{proposalId}",
+    options: {
+      auth: "jwt",
+      description: "Cancel Contract",
+      plugins: hireProposalSwagger,
+      tags: ["api", "proposal"],
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const currentDate = new Date().toUTCString();
+
+        // Check whether account is expert
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
+        });
+        await Job.findOneAndUpdate(
+          {
+            $and: [{ _id: request.params.jobId }],
+          },
+          {
+            $set: {
+              "proposals.$[proposal].proposal_status": 7, //contract completed
+              "proposals.$[proposal].mentor_check.$[mentorCheckId].checked":
+                true,
+              state: 4,
+            },
+          },
+          {
+            arrayFilters: [
+              { "proposal._id": request.params.proposalId },
+              { "mentorCheckId.mentor": account.id },
+            ],
+          },
+          { new: true }
+        );
+
+        const ObjectId = mongoose.Types.ObjectId;
+
+        const findedProposal = await Job.aggregate([
+          {
+            $match: {
+              _id: new ObjectId(request.params.jobId),
+            },
+          },
+          {
+            $unwind: "$proposals",
+          },
+          {
+            $match: {
+              "proposals._id": new ObjectId(request.params.proposalId),
+            },
+          },
+          {
+            $project: {
+              proposals: 1,
+            },
+          },
+        ]);
+
+        const approvedProposal = await Job.aggregate([
+          {
+            $match: {
+              _id: new ObjectId(request.params.jobId),
+            },
+          },
+          { $unwind: "$proposals" },
+          {
+            $match: {
+              "proposals._id": new ObjectId(request.params.proposalId),
+            },
+          },
+        ]);
+
+        return response
+          .response({ status: "ok", data: approvedProposal })
+          .code(200);
+      } catch (err) {
+        console.log(err);
+        return response
+          .response({ status: "err", err: "Approve failed!" })
+          .code(501);
+      }
+    },
+  },
+  {
+    method: "PUT",
+    path: "/{jobId}/dispute/{proposalId}",
+    options: {
+      auth: "jwt",
+      description: "Dispute Contract",
+      plugins: hireProposalSwagger,
+      tags: ["api", "proposal"],
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const currentDate = new Date().toUTCString();
+
+        // Check whether account is expert
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
+        });
+        // if (account.account_type !== "client") {
         //   return response
-        //     .response({ status: "err", err: "Applied proposal Not found!" })
-        //     .code(404);
+        //     .response({ status: "err", err: "Forbidden request" })
+        //     .code(403);
         // }
+        // try {
+        await Job.findOneAndUpdate(
+          {
+            $and: [{ _id: request.params.jobId }],
+          },
+          {
+            $set: {
+              "proposals.$[proposal].proposal_status": 8, //contract completed
+              "proposals.$[proposal].mentor_check.$[mentorCheckId].checked":
+                true,
+              state: 5,
+            },
+          },
+          {
+            arrayFilters: [
+              { "proposal._id": request.params.proposalId },
+              { "mentorCheckId.mentor": account.id },
+            ],
+          },
+          { new: true }
+        );
+
+        const ObjectId = mongoose.Types.ObjectId;
+
+        const findedProposal = await Job.aggregate([
+          {
+            $match: {
+              _id: new ObjectId(request.params.jobId),
+            },
+          },
+          {
+            $unwind: "$proposals",
+          },
+          {
+            $match: {
+              "proposals._id": new ObjectId(request.params.proposalId),
+            },
+          },
+          {
+            $project: {
+              proposals: 1,
+            },
+          },
+        ]);
+
+        // await Expert.findOneAndUpdate(
+        //   {
+        //     account: findedProposal[0].proposals.expert.id,
+        //   },
+        // {
+        //   $pop: {
+        //     ongoing_project: { project: request.params.jobId },
+        //   },
+        // }
+        // );
+
+        const approvedProposal = await Job.aggregate([
+          {
+            $match: {
+              _id: new ObjectId(request.params.jobId),
+            },
+          },
+          { $unwind: "$proposals" },
+          {
+            $match: {
+              "proposals._id": new ObjectId(request.params.proposalId),
+            },
+          },
+        ]);
 
         return response
           .response({ status: "ok", data: approvedProposal })

@@ -12,7 +12,7 @@ const stripe = new Stripe(process.env.STRP_SECRETKEY);
 export let paymentRoute = [
   {
     method: "POST",
-    path: "/",
+    path: "/deposit",
     options: {
       // auth: "jwt",
       description: "Perform payment",
@@ -44,6 +44,49 @@ export let paymentRoute = [
           .response({
             status: "ok",
             data: { clientSecret: paymentIntent.client_secret },
+          })
+          .code(200);
+      } catch (error) {
+        console.log(error);
+        return response.response({ status: "err", err: error }).code(501);
+      }
+    },
+  },
+  {
+    method: "POST",
+    path: "/withdraw",
+    options: {
+      // auth: "jwt",
+      description: "Perform payment",
+      plugins: performPaymentSwagger,
+      tags: ["api", "Payment"],
+      validate: {
+        payload: performPaymentSchema,
+        options,
+        failAction: (request, h, error) => {
+          const details = error.details.map((d) => {
+            return { err: d.message, path: d.path };
+          });
+          return h.response(details).code(400).takeover();
+        },
+      },
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const data = request.payload;
+        const amount = data["amount"];
+        const currency = data["currency"];
+        const destination = data["destination"];
+        const payout = await stripe.payouts.create({
+          amount: amount,
+          currency: currency,
+          destination: destination,
+        });
+        console.log(payout);
+        return response
+          .response({
+            status: "ok",
+            data: { payout },
           })
           .code(200);
       } catch (error) {

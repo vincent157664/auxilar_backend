@@ -1,13 +1,13 @@
 import { Request, ResponseToolkit } from "@hapi/hapi";
-import Stripe from "stripe";
+import Account from "../models/account";
 import { performPaymentSwagger } from "../swagger/payment";
 import { performPaymentSchema } from "../validation/payment";
 import dotenv from "dotenv";
+import Transaction from "../models/transaction";
 
 dotenv.config();
 
 const options = { abortEarly: false, stripUnknown: true };
-const stripe = new Stripe(process.env.STRP_SECRETKEY);
 
 export let paymentRoute = [
   {
@@ -31,19 +31,19 @@ export let paymentRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        const data = request.payload;
-        const paymentIntent = await stripe.paymentIntents.create({
-          amount: data["amount"],
-          currency: "usd",
-
-          automatic_payment_methods: {
-            enabled: true,
-          },
+        const order = request.payload["order"];
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
         });
+        const transaction = new Transaction({ transaction: order });
+        transaction.save();
+        const payload = order.purchase_units[0].amount.value;
+        account.balance + parseInt(payload);
+        account.save();
         return response
           .response({
-            status: "ok",
-            data: { clientSecret: paymentIntent.client_secret },
+            status: "Deposite completed successfully",
+            data: { balance: account.balance },
           })
           .code(200);
       } catch (error) {
@@ -73,20 +73,14 @@ export let paymentRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        const data = request.payload;
-        const amount = data["amount"];
-        const currency = data["currency"];
-        const destination = data["destination"];
-        const payout = await stripe.payouts.create({
-          amount: amount,
-          currency: currency,
-          destination: destination,
-        });
-        console.log(payout);
+        const order = request.payload["order"];
+        // const amount = order.
+        const transaction = new Transaction({ transaction: order });
+        transaction.save();
         return response
           .response({
             status: "ok",
-            data: { payout },
+            data: {},
           })
           .code(200);
       } catch (error) {

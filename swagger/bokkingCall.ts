@@ -7,7 +7,7 @@ export const createBookingCallSwagger = {
       400: {
         description: "Input Fields Required.",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -23,7 +23,7 @@ export const getBookedCallSwagger = {
       404: {
         description: "Not found!",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -43,7 +43,7 @@ export const updateBookedCallSwagger = {
       404: {
         description: "Booked call not found!",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -60,7 +60,7 @@ export const deleteBookedCallSwagger = {
       404: {
         description: "Booked call not found!",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },

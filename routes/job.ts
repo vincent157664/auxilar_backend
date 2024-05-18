@@ -117,7 +117,7 @@ export let jobRoute = [
 
         return response.response({ status: "ok", data: newJob }).code(201);
       } catch (error) {
-        return response.response({ err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -198,7 +198,7 @@ export let jobRoute = [
           .response({ status: "ok", data: "Job updated successfully" })
           .code(201);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -235,12 +235,7 @@ export let jobRoute = [
           .response({ status: "ok", data: responseData })
           .code(200);
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -324,12 +319,7 @@ export let jobRoute = [
           .response({ status: "ok", data: responseData })
           .code(200);
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -357,12 +347,7 @@ export let jobRoute = [
             .code(404);
         }
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -415,12 +400,7 @@ export let jobRoute = [
             .code(404);
         }
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -691,7 +671,7 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         console.log(error);
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -777,13 +757,8 @@ export let jobRoute = [
         return response
           .response({ code: 200, data: inviteExpertToJob.invited_expert })
           .code(200);
-      } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },
@@ -839,13 +814,8 @@ export let jobRoute = [
         ]);
 
         return response.response({ status: "ok", data: findExperts }).code(200);
-      } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },
@@ -873,7 +843,7 @@ export let jobRoute = [
           .response({ status: "ok", data: allCategories })
           .code(200);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },

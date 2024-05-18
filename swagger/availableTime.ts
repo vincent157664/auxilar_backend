@@ -10,9 +10,9 @@ export const createAvailableTimeSwagger = {
       409: {
         description: "Account already exists.",
       },
-      501: {
+      500: {
         description:
-          "Sorry, something went wrong. Please refresh the page and try again.",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -26,9 +26,9 @@ export const getAvailableTimeSwagger = {
       404: {
         description: "Schedule does not exist",
       },
-      501: {
+      500: {
         description:
-          "Sorry, something went wrong. Please refresh the page and try again.",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -43,9 +43,9 @@ export const updateAvailableTimeSwagger = {
       404: {
         description: "Not found!",
       },
-      501: {
+      500: {
         description:
-          "Sorry, something went wrong. Please refresh the page and try again.",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -60,9 +60,9 @@ export const deleteAvailableTimeSwagger = {
       404: {
         description: "Schedule does not exist",
       },
-      501: {
+      500: {
         description:
-          "Sorry, something went wrong. Please refresh the page and try again.",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

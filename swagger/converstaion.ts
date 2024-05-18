@@ -19,9 +19,9 @@ export const ConversationSwagger = {
       409: {
         description: "Conversation already exist",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -36,9 +36,9 @@ export const getAllConversationSwagger = {
       403: {
         description: "Forbidden request.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -53,9 +53,9 @@ export const getMyConversationSwagger = {
       404: {
         description: "Conversation does not exist.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -70,9 +70,9 @@ export const deleteMyConversationSwagger = {
       404: {
         description: "Conversation does not exist.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -90,9 +90,9 @@ export const putMessageToConversationSwagger = {
       404: {
         description: "Conversation does not exist.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -110,9 +110,9 @@ export const updateMessageSwagger = {
       404: {
         description: "Message does not exist",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -127,9 +127,9 @@ export const getMessageSwagger = {
       404: {
         description: "Message does not exist",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -144,9 +144,9 @@ export const deleteMessageSwagger = {
       404: {
         description: "Message does not exist",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -161,9 +161,9 @@ export const downloadMessageFileSwagger = {
       404: {
         description: "Message does not exist",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

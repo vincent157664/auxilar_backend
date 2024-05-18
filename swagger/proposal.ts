@@ -16,9 +16,9 @@ export const ProposalSwagger = {
       409: {
         description: "Proposal already applyed.",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -39,9 +39,9 @@ export const updateProposalSwagger = {
       404: {
         description: "Posted Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -62,9 +62,9 @@ export const getAllProposalSwagger = {
       404: {
         description: "Posted Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -82,9 +82,9 @@ export const getMyAllProposalSwagger = {
       404: {
         description: "Posted Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -99,9 +99,9 @@ export const getProposalSwagger = {
       404: {
         description: "Posted Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -118,9 +118,9 @@ export const deleteProposalSwagger = {
       404: {
         description: "Posted Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -137,9 +137,9 @@ export const downloadProposalSwagger = {
       404: {
         description: "Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -157,9 +157,9 @@ export const approveProposalSwagger = {
       404: {
         description: "Applied Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -177,9 +177,9 @@ export const hireProposalSwagger = {
       404: {
         description: "Applied Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -196,9 +196,9 @@ export const offerProposalSwagger = {
       404: {
         description: "Applied Proposal not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },

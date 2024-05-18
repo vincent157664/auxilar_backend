@@ -93,7 +93,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -150,7 +150,7 @@ export let adminRoute = [
           .response({ status: "ok", data: { totalCount, accountinfo } })
           .code(200);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -192,7 +192,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -253,7 +253,7 @@ export let adminRoute = [
 
         return response.response({ status: "ok", data: skill }).code(200);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -325,7 +325,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -374,7 +374,7 @@ export let adminRoute = [
             .response({ status: "err", err: "Skill not found!" })
             .code(404);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -417,7 +417,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -460,7 +460,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -521,7 +521,7 @@ export let adminRoute = [
 
         return response.response({ status: "ok", data: major }).code(200);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -593,7 +593,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -640,7 +640,7 @@ export let adminRoute = [
             .response({ status: "err", err: "Major not found!" })
             .code(404);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -682,7 +682,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -724,7 +724,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -785,7 +785,7 @@ export let adminRoute = [
 
         return response.response({ status: "ok", data: category }).code(200);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -857,7 +857,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -904,7 +904,7 @@ export let adminRoute = [
             .response({ status: "err", err: "Category not found!" })
             .code(404);
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -948,7 +948,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -994,7 +994,7 @@ export let adminRoute = [
             .code(404);
         }
       } catch (error) {
-        return response.response({ staus: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },

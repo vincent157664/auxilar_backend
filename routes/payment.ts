@@ -153,7 +153,6 @@ export let paymentRoute = [
             },
           }
         );
-        console.log(result.data);
 
         if (result.status !== 201) {
           return response
@@ -169,7 +168,6 @@ export let paymentRoute = [
               Authorization: `Bearer ${access_token}`,
             },
           });
-          console.log(transaction.data.amount);
           account.balance -= parseInt(transaction?.data?.amount?.value);
           account.save();
           const transactionData = new Transaction({

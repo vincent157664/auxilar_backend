@@ -50,7 +50,8 @@ export const signinAccountSwagger = {
         description: "User not found.",
       },
       405: {
-        description: "Password incorrect.",
+        description:
+          "User name or password is incorrect. Please check again correctly.",
       },
       500: {
         description:

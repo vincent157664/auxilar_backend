@@ -365,7 +365,6 @@ export let expertRoute = [
             useFindAndModify: false,
           }
         ).then((res) => {
-          console.log("Updated data", res);
         });
 
         const responseData = await Expert.findOne({ account: account.id });
@@ -464,7 +463,6 @@ export let expertRoute = [
             useFindAndModify: false,
           }
         ).then((res) => {
-          console.log("Updated data", res);
         });
 
         const responseData = await Expert.findOne({ account: account.id });

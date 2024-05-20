@@ -174,7 +174,28 @@ export const inviteExpertSwagger = {
     },
   },
 };
-
+export const readInvitationSwagger = {
+  "hapi-swagger": {
+    responses: {
+      200: {
+        description: "Read invitation",
+      },
+      403: {
+        description: "Forbidden request",
+      },
+      404: {
+        description: "Not found!",
+      },
+      409: {
+        description: "Expert already read this invitation!",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
+    },
+  },
+};
 export const recommendedExpertsSwagger = {
   "hapi-swagger": {
     responses: {

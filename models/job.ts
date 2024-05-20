@@ -98,6 +98,10 @@ const JobSchema = new Schema({
       content: {
         type: String,
       },
+      read: {
+        type: Boolean,
+        default:false
+      },
     },
   ],
 

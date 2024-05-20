@@ -32,7 +32,6 @@ const generateAccessToken = async () => {
         },
       }
     );
-    console.log("access token is ", response.data.access_token);
     return response.data.access_token;
   } catch (error) {
     console.error("Failed to generate Access Token:", error);
@@ -103,7 +102,7 @@ export let paymentRoute = [
     },
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
-        const account = Account.findOne({
+        const account = await Account.findOne({
           email: request.auth.credentials.email,
         });
         const balance = request.payload["balance"];
@@ -168,7 +167,7 @@ export let paymentRoute = [
               Authorization: `Bearer ${access_token}`,
             },
           });
-          account.balance -= parseInt(transaction?.data?.amount?.value);
+          account.balance -= parseInt(transaction?.data.batch_header?.amount?.value);
           account.save();
           const transactionData = new Transaction({
             transaction: transaction.data,
@@ -183,7 +182,6 @@ export let paymentRoute = [
             .code(200);
         }
       } catch (error) {
-        console.log(error);
         return response.response(error).code(500);
       }
     },

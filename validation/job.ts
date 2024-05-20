@@ -113,13 +113,13 @@ interface min_max_object {
 
 export const findPostedJobSchema = Joi.object({
   // and
-  skill_set: Joi.array<String>().required().messages({
+  skill_set: Joi.array<String>().optional().messages({
     "any.required": "Please provide skill set",
   }),
-  category: Joi.array<String>().required().messages({
+  category: Joi.array<String>().optional().messages({
     "any.required": "Please provide category",
   }),
-  title: Joi.string().required().messages({
+  title: Joi.string().optional().messages({
     "any.required": "Please provide title",
   }),
 
@@ -142,7 +142,7 @@ export const findPostedJobSchema = Joi.object({
       }),
     }),
   })
-    .required()
+    .optional()
     .messages({
       "any.required": "Please provide budget_type",
     }),
@@ -174,5 +174,11 @@ export const inviteExpertSchema = Joi.object({
   }),
   expertId: Joi.string().required().messages({
     "any.required": "Please provide expert id",
+  }),
+});
+
+export const readInvitationSchema = Joi.object({
+  jobId: Joi.string().required().messages({
+    "any.rquired": "Please provide job id",
   }),
 });

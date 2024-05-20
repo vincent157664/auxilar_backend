@@ -521,7 +521,6 @@ export let conversationRoute = [
         });
 
         const contactAccount = await Account.findById(request.params.contactId);
-        console.log(contactAccount);
         if (!(myAccount && contactAccount)) {
           return response
             .response({ status: "err", err: "Account does not exist!" })

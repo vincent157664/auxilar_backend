@@ -20,10 +20,9 @@ const vadliateAccount = async (decoded, request, h) => {
 
 const path = process.cwd();
 const init = async () => {
-  await connectDB();
-  const server: hapi.Server = new hapi.Server({
-    port: 3060,
-    routes: { cors: { origin: ["*"] }, payload: { maxBytes: 9999999 } },
+ const server: hapi.Server = new hapi.Server({
+    port: 3030,
+    routes: { cors: { origin: ["*"] }, payload:{maxBytes:9999999} },
     host: "0.0.0.0",
   });
   await server.register(Inert);

@@ -10,7 +10,7 @@ export const ProfileSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -26,7 +26,7 @@ export const getProfileSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -42,7 +42,7 @@ export const updateBaseInfoSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -58,7 +58,7 @@ export const updateSummarySwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -74,7 +74,7 @@ export const updatePortfolioSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -90,7 +90,7 @@ export const updatePortfolioItemSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -106,7 +106,7 @@ export const deletePortfolioItemSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -122,7 +122,7 @@ export const addPortfolioItemSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -138,7 +138,7 @@ export const updateVerifierSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -154,7 +154,7 @@ export const updateResumeSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -170,7 +170,7 @@ export const updatePersonDetailSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -186,7 +186,7 @@ export const updateEducationSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -202,7 +202,7 @@ export const deleteProfileSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -225,7 +225,7 @@ export const findExpertSwagger = {
       404: {
         description: "Expert is not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },

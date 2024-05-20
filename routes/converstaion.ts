@@ -145,10 +145,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: newConversation })
           .code(201);
       } catch (err) {
-        console.log(err);
-        return response
-          .response({ status: "err", err: "Creating conversation failed!" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -502,9 +499,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: allConversations })
           .code(200);
       } catch (err) {
-        return response
-          .response({ status: "err", err: "Getting conversation failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -526,7 +521,6 @@ export let conversationRoute = [
         });
 
         const contactAccount = await Account.findById(request.params.contactId);
-        console.log(contactAccount);
         if (!(myAccount && contactAccount)) {
           return response
             .response({ status: "err", err: "Account does not exist!" })
@@ -658,9 +652,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: myConversation })
           .code(200);
       } catch (err) {
-        return response
-          .response({ status: "err", err: "Getting conversation failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -784,9 +776,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: myConversation })
           .code(200);
       } catch (err) {
-        return response
-          .response({ status: "err", err: "Deleting conversation failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -1014,9 +1004,7 @@ export let conversationRoute = [
             .response({ status: "ok", data: myConversation })
             .code(200);
         } catch (err) {
-          return response
-            .response({ status: "err", err: "Updating conversation failed" })
-            .code(501);
+          return response.response(err).code(500);
         }
       },
     },
@@ -1269,12 +1257,7 @@ export let conversationRoute = [
             .response({ status: "ok", data: "Update message Success!" })
             .code(200);
         } catch (err) {
-          return response
-            .response({
-              status: "err",
-              err: "Sorry, something went wrong. Please refresh the page and try again.",
-            })
-            .code(501);
+          return response.response(err).code(500);
         }
       },
     },
@@ -1483,12 +1466,7 @@ export let conversationRoute = [
 
         return response.response({ status: "ok", data: myMessage }).code(200);
       } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -1597,12 +1575,7 @@ export let conversationRoute = [
 
         return response.response({ status: "ok", data: myMessage }).code(200);
       } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -1718,12 +1691,7 @@ export let conversationRoute = [
           .response({ status: "ok", data: "Delete message Success!" })
           .code(200);
       } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },

@@ -9,4 +9,6 @@ export default {
   awsAccessKeyId: process.env.AWS_ACCESSKEYID,
   awsSecretAccessKey: process.env.AWS_SECRETACCESSKEY,
   strpSecreteKey: process.env.STRP_SECRETKEY,
+  paypalClientId: process.env.PAYPAL_CLIENT_ID,
+  paypalClientSecret: process.env.PAYPAL_CLIENT_SECRET,
 };

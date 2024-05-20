@@ -7,7 +7,7 @@ export const getAllMajors = {
       404: {
         description: "Major not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },

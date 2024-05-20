@@ -7,6 +7,7 @@ import {
   getJobSwagger,
   getMyAllJobSwagger,
   inviteExpertSwagger,
+  readInvitationSwagger,
   recommendedExpertsSwagger,
   updateJobSwagger,
 } from "../swagger/job";
@@ -14,6 +15,7 @@ import {
   JobSchema,
   findPostedJobSchema,
   inviteExpertSchema,
+  readInvitationSchema,
   updateJobSchema,
 } from "../validation/job";
 
@@ -117,7 +119,7 @@ export let jobRoute = [
 
         return response.response({ status: "ok", data: newJob }).code(201);
       } catch (error) {
-        return response.response({ err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -198,7 +200,7 @@ export let jobRoute = [
           .response({ status: "ok", data: "Job updated successfully" })
           .code(201);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -235,12 +237,7 @@ export let jobRoute = [
           .response({ status: "ok", data: responseData })
           .code(200);
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -324,12 +321,7 @@ export let jobRoute = [
           .response({ status: "ok", data: responseData })
           .code(200);
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -357,12 +349,7 @@ export let jobRoute = [
             .code(404);
         }
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -415,12 +402,7 @@ export let jobRoute = [
             .code(404);
         }
       } catch (error) {
-        return response
-          .response({
-            status: "err",
-            err: "Request Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -691,7 +673,7 @@ export let jobRoute = [
           .code(200);
       } catch (error) {
         console.log(error);
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -756,6 +738,7 @@ export let jobRoute = [
             id: expertId,
             first_name: expert.account.first_name,
             last_name: expert.account.last_name,
+            read: false,
           };
           inviteExpertToJob = await Job.findOneAndUpdate(
             {
@@ -777,13 +760,8 @@ export let jobRoute = [
         return response
           .response({ code: 200, data: inviteExpertToJob.invited_expert })
           .code(200);
-      } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },
@@ -839,13 +817,8 @@ export let jobRoute = [
         ]);
 
         return response.response({ status: "ok", data: findExperts }).code(200);
-      } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Sorry, something went wrong. Please refresh the page and try again.!",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },
@@ -873,7 +846,122 @@ export let jobRoute = [
           .response({ status: "ok", data: allCategories })
           .code(200);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(501);
+        return response.response(error).code(500);
+      }
+    },
+  },
+
+  {
+    method: "GET",
+    path: "/invite",
+    options: {
+      auth: "jwt",
+      description: "Get all invitations",
+      plugins: getAllCategories,
+      tags: ["api", "job"],
+    },
+
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
+        });
+        if (!account) {
+          return response
+            .response({ status: 404, message: "Not Found Expert Account." })
+            .code(404);
+        }
+        if (account.account_type !== "expert") {
+          return response
+            .response({ status: 403, message: "Fobbiden request!" })
+            .code(403);
+        }
+        const invitations = await Job.aggregate([
+          {
+            $match: {
+              "invited_expert.id": account._id, // Update to match the correct field name
+            },
+          },
+          {
+            $project: {
+              title: 1,
+              jobId: "$_id", // Correct the field path to access the _id field
+              expertId: { $arrayElemAt: ["$invited_expert.id", 0] }, // Correct the field path to access the expert ID,
+              read: { $arrayElemAt: ["$invited_expert.read", 0] },
+            },
+          },
+        ]).exec();
+        return response.response({ invitations }).code(200);
+      } catch (error) {
+        return response.response(error).code(500);
+      }
+    },
+  },
+  {
+    method: "PUT",
+    path: "/invite",
+    options: {
+      auth: "jwt",
+      description: "Invite expert to the posted job",
+      plugins: readInvitationSwagger,
+      tags: ["api", "job"],
+      validate: {
+        payload: readInvitationSchema,
+        options,
+        failAction: (request, h, error) => {
+          const details = error.details.map((d) => {
+            return { err: d.message, path: d.path };
+          });
+          return h.response(details).code(400).takeover();
+        },
+      },
+    },
+    handler: async (request: Request, response: ResponseToolkit) => {
+      try {
+        // check whether account is expert
+        const account = await Account.findOne({
+          email: request.auth.credentials.email,
+        });
+        if (account.account_type !== "expert") {
+          return response
+            .response({ status: "err", err: "Forbidden Request" })
+            .code(403);
+        }
+
+        // Check whether expert profile exist
+        const expert = await Expert.findOne({
+          account: account._id,
+        });
+        if (!expert) {
+          return response
+            .response({ status: "err", err: "Expert does not exist" })
+            .code(404);
+        }
+        const jobId = request.payload["jobId"];
+        // check already invited
+        const invitation = await Job.findOne({
+          _id: jobId,
+          "invited_expert.id": expert.account._id,
+        });
+        if (invitation.invited_expert[0].read === true) {
+          return response
+            .response({
+              status: "err",
+              err: "Expert already read this invitation!",
+            })
+            .code(409);
+        }
+
+        const invitedExperts = await Job.findOneAndUpdate(
+          { _id: jobId, "invited_expert.id": account._id },
+          { $set: { "invited_expert.$.read": true } },
+          { new: true }
+        );
+        return response
+          .response({ status: 200, data: invitedExperts._id })
+          .code(200);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },

@@ -15,19 +15,21 @@ export const makeContractSchema = Joi.object({
   job: Joi.string().required().messages({
     "any.required": "Please provide job id",
   }),
-  client_id: Joi.string().required().messages({
-    "any.required": "Please provide client id",
-  }),
   expert_id: Joi.string().required().messages({
     "any.required": "Please provide expert id",
   }),
   additional_information: Joi.string().allow(""),
-  milestones: Joi.array().items(milestone).allow(""),
+  milestones: Joi.array().optional().messages({
+    "any.required": "Please provide milestones",
+  }),
   total_budget: Joi.object({
     proposed_budget: Joi.number(),
   }),
   paymentTerms: Joi.optional().allow("").messages({
     "any.required": "Please provide paymentTerms.",
+  }),
+  proposal: Joi.string().required().messages({
+    "any.required": "Please provide proposal id",
   }),
 });
 

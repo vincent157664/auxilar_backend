@@ -155,7 +155,7 @@ export let accountRoute = [
           .code(201);
         // linkUrl: `localhost:3000/verify-email/${token}`,
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -193,7 +193,7 @@ export let accountRoute = [
           })
           .code(200);
       } catch (error) {
-        return response.response({ err: error }).code(400);
+        return response.response(error).code(500);
       }
     },
   },
@@ -236,7 +236,7 @@ export let accountRoute = [
               err: "You account is disabled! Please contact auxilarorg@gmail.com.",
             })
             .code(404);
-        } 
+        }
 
         const isMatch = await bcrypt.compare(password, account.password);
         if (!isMatch) {
@@ -256,7 +256,7 @@ export let accountRoute = [
 
         return response.response({ token }).code(200);
       } catch (error) {
-        return response.response({ err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -285,7 +285,7 @@ export let accountRoute = [
           })
           .code(200);
       } catch (error) {
-        return response.response({ err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -326,7 +326,7 @@ export let accountRoute = [
           .response({ msg: "Successfuly changed password" })
           .code(200);
       } catch (error) {
-        return response.response({ err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -477,7 +477,7 @@ export let accountRoute = [
           .response({ status: "ok", data: "Reset Password" })
           .code(200);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -502,22 +502,26 @@ export let accountRoute = [
       },
     },
     handler: async (request: Request, response: ResponseToolkit) => {
-      const email = request.payload["email"];
-      const code = request.payload["passcode"];
-      const passcode = await Passcode.findOne({
-        email: email,
-        passcode: code,
-      });
+      try {
+        const email = request.payload["email"];
+        const code = request.payload["passcode"];
+        const passcode = await Passcode.findOne({
+          email: email,
+          passcode: code,
+        });
 
-      if (!passcode) {
-        return response.response({ err: "Passcode incorrect!" }).code(404);
+        if (!passcode) {
+          return response.response({ err: "Passcode incorrect!" }).code(404);
+        }
+
+        const token = Jwt.sign({ passcode: passcode }, config.jwtSecret, {
+          expiresIn: "1day",
+        });
+
+        return response.response({ status: "ok", data: token }).code(200);
+      } catch (error) {
+        return response.response(error).code(500);
       }
-
-      const token = Jwt.sign({ passcode: passcode }, config.jwtSecret, {
-        expiresIn: "1day",
-      });
-
-      return response.response({ status: "ok", data: token }).code(200);
     },
   },
 
@@ -570,7 +574,7 @@ export let accountRoute = [
         // return response.response({ account }).code(200);
         return response.response({ msg: "update Success!" }).code(200);
       } catch (error) {
-        return response.response({ err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -597,7 +601,7 @@ export let accountRoute = [
           })
           .code(200);
       } catch (error) {
-        return response.response({ status: "err", err: error }).code(500);
+        return response.response(error).code(500);
       }
     },
   },
@@ -708,13 +712,8 @@ export let accountRoute = [
         }
 
         return response.response({ status: "ok", data: accountProfile });
-      } catch (err) {
-        return response
-          .response({
-            status: "err",
-            err: "Getting profile failed. Please try again!",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },

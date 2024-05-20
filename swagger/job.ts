@@ -16,9 +16,9 @@ export const JobSwagger = {
       409: {
         description: "Job already posted.",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -39,9 +39,9 @@ export const updateJobSwagger = {
       404: {
         description: "Posted job not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -65,9 +65,9 @@ export const findPostedJobSwagger = {
       406: {
         description: "Not acceptable request.",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -88,9 +88,9 @@ export const getAllJobSwagger = {
       404: {
         description: "Posted job not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -108,9 +108,9 @@ export const getMyAllJobSwagger = {
       404: {
         description: "Posted job not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -125,9 +125,9 @@ export const getJobSwagger = {
       404: {
         description: "Posted job not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -144,9 +144,9 @@ export const deleteJobSwagger = {
       404: {
         description: "Posted job not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -167,14 +167,35 @@ export const inviteExpertSwagger = {
       409: {
         description: "Expert already invited!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
 };
-
+export const readInvitationSwagger = {
+  "hapi-swagger": {
+    responses: {
+      200: {
+        description: "Read invitation",
+      },
+      403: {
+        description: "Forbidden request",
+      },
+      404: {
+        description: "Not found!",
+      },
+      409: {
+        description: "Expert already read this invitation!",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
+    },
+  },
+};
 export const recommendedExpertsSwagger = {
   "hapi-swagger": {
     responses: {
@@ -190,9 +211,9 @@ export const recommendedExpertsSwagger = {
       404: {
         description: "Expert is not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

@@ -98,6 +98,10 @@ const JobSchema = new Schema({
       content: {
         type: String,
       },
+      read: {
+        type: Boolean,
+        default:false
+      },
     },
   ],
 
@@ -138,6 +142,12 @@ const JobSchema = new Schema({
       mentor_check: [
         {
           mentor: {
+            type: String,
+          },
+          mentorFirstName: {
+            type: String,
+          },
+          mentorLastName: {
             type: String,
           },
           checked: {

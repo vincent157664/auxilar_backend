@@ -7,9 +7,9 @@ export const getAllCategories = {
       404: {
         description: "Category not found!",
       },
-      501: {
+      500: {
         description:
-          "Requeset Sorry, something went wrong. Please refresh the page and try again..",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

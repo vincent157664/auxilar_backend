@@ -62,13 +62,8 @@ export let availableTimeRoute = [
         return response
           .response({ status: "ok", data: "Schedule created successfully!" })
           .code(201);
-      } catch (err) {
-        return response
-          .response({
-            status: err,
-            err: "Creating schedule failed. Please try again.",
-          })
-          .code(501);
+      } catch (error) {
+        return response.response(error).code(500);
       }
     },
   },
@@ -96,15 +91,11 @@ export let availableTimeRoute = [
         }
         return response.response({ status: "ok", data: schedule }).code(200);
       } catch (err) {
-        return response
-          .response({
-            status: err,
-            err: "Getting schedule failed. Please try again",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
+
   {
     method: "GET",
     path: "/{contactorId}",
@@ -140,9 +131,7 @@ export let availableTimeRoute = [
         // }
         return response.response({ status: "ok", data: schedule }).code(200);
       } catch (err) {
-        return response
-          .response({ status: err, err: "Getting schedule failed." })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -199,12 +188,7 @@ export let availableTimeRoute = [
           .response({ status: "ok", data: updateSchedule })
           .code(200);
       } catch (err) {
-        return response
-          .response({
-            status: err,
-            err: "Updating schedule failed. Please try agian.",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -238,12 +222,7 @@ export let availableTimeRoute = [
             .code(200);
         }
       } catch (err) {
-        return response
-          .response({
-            status: err,
-            err: "Deleting schedule failed. Please try again",
-          })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },

@@ -103,14 +103,16 @@ export let contractRoute = [
             0
           );
           account.balance -= totalBudget;
+          account.totlaEarning += totalBudget;
           systemAccount.balance += totalBudget;
-          account.save();
-          systemAccount.save();
+          await account.save();
+          await systemAccount.save();
         } else {
           account.balance -= data["total_budget"].proposed_budget;
+          account.totlaEarning += data["total_budget"].proposed_budget;
           systemAccount.balance += data["total_budget"].proposed_budget;
-          systemAccount.save();
-          account.save();
+          await systemAccount.save();
+          await account.save();
         }
 
         // Add ongoing_project to expert
@@ -142,9 +144,7 @@ export let contractRoute = [
           .code(201);
       } catch (err) {
         console.log(err);
-        return response
-          .response({ staus: "err", err: "Creating contract failed!" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -178,6 +178,9 @@ export let contractRoute = [
         const systemAccount = await Account.findOne({
           email: "auxilarorg@gmail.com",
         });
+        const expertAccount = await Account.findById(
+          request.payload["expert_id"]
+        );
 
         if (account.account_type !== "client") {
           return response
@@ -222,10 +225,26 @@ export let contractRoute = [
             .code(409);
         }
         if (contract.paymentTerms === "Fixed") {
-          systemAccount.balance -= contract.total_amount.proposed_budget * 0.8;
-          expert.balance += contract.total_amount.proposed_budget * 0.8;
-          systemAccount.save();
-          expert.save();
+          if (contract.milestones.length !== 0) {
+            const totalBudget = contract.milestones.reduce(
+              (budget: number, milestone) => budget + milestone.amount,
+              0
+            );
+            systemAccount.balance -= totalBudget * 0.9;
+            expertAccount.balance += totalBudget * 0.9;
+            expertAccount.totlaEarning += totalBudget * 0.9;
+            await account.save();
+            await systemAccount.save();
+          } else {
+            systemAccount.balance -=
+              contract.total_budget.proposed_budget * 0.9;
+            expertAccount.balance +=
+              contract.total_budget.proposed_budget * 0.9;
+            expertAccount.totlaEarning +=
+              contract.total_budget.proposed_budget * 0.9;
+            await systemAccount.save();
+            await expertAccount.save();
+          }
         } else if (contract.paymentTerms === "Hourly") {
           if (account.balance < data["budget"]) {
             return response
@@ -236,12 +255,13 @@ export let contractRoute = [
               })
               .code(402);
           } else {
-            account.balance -= data["budget"] * 0.8;
-            expert.balance += data["budget"] * 0.8;
+            account.balance -= data["budget"] * 0.9;
+            expertAccount.balance += data["budget"] * 0.9;
+            expertAccount.totlaEarning += data["budget"] * 0.9;
             systemAccount.balance += data["budget"] * 0.2;
-            account.save();
-            expert.save();
-            systemAccount.save();
+            await account.save();
+            await expertAccount.save();
+            await systemAccount.save();
           }
         }
         contract.status = "Completed";
@@ -254,9 +274,7 @@ export let contractRoute = [
           .code(200);
       } catch (err) {
         console.log(err);
-        return response
-          .response({ staus: "err", err: "Creating contract failed!" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -312,9 +330,7 @@ export let contractRoute = [
         }
         return response.response({ status: "ok", data: contract }).code(200);
       } catch (err) {
-        return response
-          .response({ status: err, err: "Getting contract information failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -355,9 +371,7 @@ export let contractRoute = [
         }
         return response.response({ status: "ok", data: contract }).code(200);
       } catch (err) {
-        return response
-          .response({ status: err, err: "Getting contract information failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -441,9 +455,7 @@ export let contractRoute = [
           .response({ status: "ok", data: updateContract })
           .code(200);
       } catch (err) {
-        return response
-          .response({ status: err, err: "Updating contract failed" })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },
@@ -489,7 +501,7 @@ export let contractRoute = [
           client_id: request.auth.credentials.accountId,
           expert_id: request.params.expertId,
         });
-        if (!deletedContract.deletedCount) {
+        if (!deletedContract) {
           return response
             .response({ stauts: "err", err: "Contract doesn't exist" })
             .code(404);
@@ -498,9 +510,7 @@ export let contractRoute = [
           .response({ status: "ok", data: "Contract deleted successfully!" })
           .code(200);
       } catch (err) {
-        return response
-          .response({ status: err, err: "Deleting contract failed." })
-          .code(501);
+        return response.response(err).code(500);
       }
     },
   },

@@ -51,7 +51,6 @@ export let mentorRoute = [
         const account = await Account.findById(
           request.auth.credentials.accountId
         );
-        console.log(request.auth.credentials.accountId);
         // Check account type
         if (account.account_type !== "mentor") {
           return response

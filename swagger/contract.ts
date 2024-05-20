@@ -16,7 +16,7 @@ export const makeContractSwagger = {
       409: {
         description: "Contract already exist!",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -41,7 +41,7 @@ export const completeContractSwagger = {
       409: {
         description: "Contract already exist!",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -57,7 +57,7 @@ export const getContractSwagger = {
       404: {
         description: "Contract does not exist",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -77,7 +77,7 @@ export const updateContractSwagger = {
       404: {
         description: "Contract does not exist",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },
@@ -94,7 +94,7 @@ export const deleteContractSwagger = {
       404: {
         description: "Contract does not exist",
       },
-      501: {
+      500: {
         description:
           "Sorry, something went wrong. Please refresh the page and try again.",
       },

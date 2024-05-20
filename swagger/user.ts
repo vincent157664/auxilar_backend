@@ -10,6 +10,10 @@ export const createUserSwagger = {
       409: {
         description: "User already exists.",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -26,6 +30,10 @@ export const loginUserSwagger = {
       404: {
         description: "User not found.",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -38,6 +46,10 @@ export const otpSwagger = {
       },
       400: {
         description: "OTP Verification Failed.",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -52,6 +64,10 @@ export const resendEmailVerifySwagger = {
       400: {
         description: "Sending email verification failed",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -64,6 +80,10 @@ export const resendOTPVerifySwagger = {
       },
       400: {
         description: "Sending otp code failed",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -78,6 +98,10 @@ export const resetPasswordSwagger = {
       400: {
         description: "Sending failed",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -90,6 +114,10 @@ export const verifyEmailSwagger = {
       },
       400: {
         description: "Email Verification Failed.",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -112,6 +140,10 @@ export const currentUserSwagger = {
       401: {
         description: "Unauthorized",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -128,6 +160,10 @@ export const getAllUserSwawgger = {
       },
       403: {
         description: "Permission error",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },
@@ -146,6 +182,10 @@ export const getSingleUserSwagger = {
       403: {
         description: "Permission error",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -163,6 +203,10 @@ export const updateSingleUserSwagger = {
       401: {
         description: "Unauthorized",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
+      },
     },
   },
 };
@@ -179,6 +223,10 @@ export const deleteSingleUserSwagger = {
       },
       401: {
         description: "Unauthorized",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again..",
       },
     },
   },

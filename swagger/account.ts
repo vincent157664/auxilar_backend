@@ -10,6 +10,10 @@ export const createAccountSwagger = {
       409: {
         description: "Account already exists.",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
     },
   },
 };
@@ -21,6 +25,10 @@ export const verifyEmailSwagger = {
       },
       400: {
         description: "Sending email verification failed",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -42,7 +50,12 @@ export const signinAccountSwagger = {
         description: "User not found.",
       },
       405: {
-        description: "Password incorrect.",
+        description:
+          "User name or password is incorrect. Please check again correctly.",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -65,6 +78,10 @@ export const currentAccountSwagger = {
       401: {
         description: "Unauthorized",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
     },
   },
 };
@@ -77,6 +94,10 @@ export const changeAccountPasswordSwagger = {
       },
       400: {
         description: "Input Fields Required.",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -95,6 +116,10 @@ export const forgotAccountPasswordSwagger = {
       404: {
         description: "Account not found",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
     },
   },
 };
@@ -111,6 +136,10 @@ export const resetAccountPasswordSwagger = {
       404: {
         description: "Passcode incorrect",
       },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
+      },
     },
   },
 };
@@ -125,6 +154,10 @@ export const updateAccountPasswordSwagger = {
       },
       404: {
         description: "Account not found",
+      },
+      500: {
+        description:
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -142,9 +175,9 @@ export const getAccountProfileSwagger = {
       404: {
         description: "Not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

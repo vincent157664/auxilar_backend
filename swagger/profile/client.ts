@@ -10,7 +10,7 @@ export const ProfileSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Request Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -30,7 +30,7 @@ export const updateSummarySwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -50,7 +50,7 @@ export const updateAvatarSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -69,7 +69,7 @@ export const updatePersonalInfoSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -88,7 +88,7 @@ export const updateSocialMediaSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -107,7 +107,7 @@ export const updatePaymentInfoSwagger = {
       403: {
         description: "Forbidden request",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -123,7 +123,7 @@ export const getProfileSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },
@@ -139,7 +139,7 @@ export const deleteProfileSwagger = {
       404: {
         description: "Profile not found!",
       },
-      501: {
+      500: {
         description:
           "Requeset Sorry, something went wrong. Please refresh the page and try again..",
       },

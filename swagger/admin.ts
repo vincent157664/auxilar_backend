@@ -16,9 +16,9 @@ export const updateAccountStatusSwagger = {
       409: {
         description: "Account already exists.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -33,9 +33,9 @@ export const getAccountInfoSwagger = {
       403: {
         description: "Forbidden request.",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -53,9 +53,9 @@ export const deleteAccountInfoSwagger = {
       404: {
         description: "Account not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -73,9 +73,9 @@ export const addSkillSwagger = {
       409: {
         description: "Skill already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -96,9 +96,9 @@ export const updateSkillSwagger = {
       409: {
         description: "Skill already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -116,9 +116,9 @@ export const deleteSkillSwagger = {
       404: {
         description: "Skill not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -136,9 +136,9 @@ export const getAllSkillSwagger = {
       404: {
         description: "Skill not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -156,9 +156,9 @@ export const getSkillSwagger = {
       404: {
         description: "Skill not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -176,9 +176,9 @@ export const addMajorSwagger = {
       409: {
         description: "Major already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -199,9 +199,9 @@ export const updateMajorSwagger = {
       409: {
         description: "Major already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -219,9 +219,9 @@ export const deleteMajorSwagger = {
       404: {
         description: "Major not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -239,9 +239,9 @@ export const getAllMajorSwagger = {
       404: {
         description: "Major not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -259,9 +259,9 @@ export const getMajorSwagger = {
       404: {
         description: "Major not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -279,9 +279,9 @@ export const addCategorySwagger = {
       409: {
         description: "Category already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -302,9 +302,9 @@ export const updateCategorySwagger = {
       409: {
         description: "Category already exist!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -322,9 +322,9 @@ export const deleteCategorySwagger = {
       404: {
         description: "Category not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -342,9 +342,9 @@ export const getAllCategorySwagger = {
       404: {
         description: "Category not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },
@@ -362,9 +362,9 @@ export const getCategorySwagger = {
       404: {
         description: "Category not found!",
       },
-      501: {
+      500: {
         description:
-          "Request Sorry, something went wrong. Please refresh the page and try again.!",
+          "Something went wrong. Please refresh the page and try again!",
       },
     },
   },

@@ -88,7 +88,7 @@ export let bookingCallRoute = [
           })
           .code(201);
       } catch (error) {
-        return response.response({ status: "error", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -130,7 +130,7 @@ export let bookingCallRoute = [
           })
           .code(200);
       } catch (error) {
-        return response.response({ status: "error", err: error }).code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -164,12 +164,7 @@ export let bookingCallRoute = [
 
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
-        return response
-          .response({
-            staus: "err",
-            err: "Getting schedule information failed. Please try again",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -209,12 +204,7 @@ export let bookingCallRoute = [
 
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
-        return response
-          .response({
-            staus: "err",
-            err: "Getting schedule information failed.",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -256,12 +246,7 @@ export let bookingCallRoute = [
 
         return response.response({ status: "ok", data: bookedCalls }).code(200);
       } catch (error) {
-        return response
-          .response({
-            staus: "err",
-            err: "Getting schedule information failed",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -336,12 +321,7 @@ export let bookingCallRoute = [
           .response({ status: "ok", data: updatedBookedCall })
           .code(200);
       } catch (error) {
-        return response
-          .response({
-            staus: "err",
-            err: "Scheduling failed. Please try again.",
-          })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },
@@ -385,9 +365,7 @@ export let bookingCallRoute = [
             .code(200);
         }
       } catch (error) {
-        return response
-          .response({ status: "err", err: "Deleting schedule failed!" })
-          .code(501);
+        return response.response(error).code(500);
       }
     },
   },

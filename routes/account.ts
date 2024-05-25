@@ -378,12 +378,6 @@ export let accountRoute = [
         const baseUrl = `${request.server.info.protocol}://${request.info.host}`;
         // linkUrl: `localhost:3000/account/update-password/${token}`,
 
-        const ses = new AWS.SES({
-          region: config.awsRegion,
-          accessKeyId: config.awsAccessKeyId,
-          secretAccessKey: config.awsSecretAccessKey,
-        });
-
         // const content = `Hi ${request.payload["first_name"]} ${request.payload["last_name"]}
         //                 Thanks for your interest in joining Auxilar! To complete your registration, we need you to
         //                 verify your email address."http://136.243.150.17:3000/account/verify-email/${token}"
@@ -410,7 +404,6 @@ export let accountRoute = [
          font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
           width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
           <tr><td><div style="text-align:center;margin:0 auto">
-          data-saferedirecturl="https://www.google.com/url?q="https://auxilar.org/account/reset-password">
           passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
           <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
           padding-left:20px;padding-right:20px;padding-top:20px">
@@ -420,59 +413,7 @@ export let accountRoute = [
           padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
           Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
 
-        //   const content = `<tr><td style="background-color:rgba(255,255,255,1);padding-top:30px;padding-bottom:30px">
-        // <table border="0" cellpadding="0" cellspacing="0" width="100%">
-        // <tbody><tr><td align="left" style="padding-top:0;padding-bottom:20px;padding-left:30px">
-        // <span style="font-size:40px;color:rgb(27,158,197)">Auxilar</span>
-        // </td></tr>
-        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        // padding:20px"><h2 style="margin-top:0;margin-bottom:0;font-family:Helvetica,sans-serif;
-        // font-weight:normal;font-size:24px;line-height:30px;color:rgba(0,30,0,1)">
-        // Update Password</h2></td></tr>
-        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        // padding-left:20px;padding-right:20px;padding-top:20px">Hi ${account.first_name} ${account.last_name} , </td></tr>
-        // <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        // padding-left:20px;padding-right:20px;padding-top:20px">
-        // Thanks for your interest in Auxilar! To complete your password update, we need you to
-        //  reset your password first. </td></tr><tr><td style="font-family:Helvetica,Arial,sans-serif;
-        //  font-size:16px;line-height:24px;padding:40px 20px 20px"><table style="text-align:center"
-        //   width="100%" border="0" cellspacing="0" cellpadding="0"><tbody>
-        //   <tr><td><div style="text-align:center;margin:0 auto">
-        //   data-saferedirecturl="https://www.google.com/url?q="http://195.201.56.175:3000/account/reset-password">
-        //   passcode: ${random6Digits}</div></td></tr></tbody></table></td></tr><tr>
-        //   <td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        //   padding-left:20px;padding-right:20px;padding-top:20px">
-        //   Please note that not all applications to join Auxilar are accepted.
-        //   We will notify you of our decision by email within 24 hours. </td></tr>
-        //   <tr><td style="font-family:Helvetica,Arial,sans-serif;font-size:16px;line-height:24px;
-        //   padding-left:20px;padding-right:20px;padding-top:30px"><div style="padding-top:10px">
-        //   Thanks for your time,<br>The Auxilar Team</div></td></tr></tbody></table></td></tr>`;
-
-        const emailParams = {
-          Source: "galaxydragon0702@gmail.com",
-          Destination: {
-            ToAddresses: [account.email],
-          },
-          Message: {
-            Subject: {
-              Data: "Reset Password",
-            },
-            Body: {
-              Html: {
-                Data: content,
-              },
-            },
-          },
-        };
-
-        ses.sendEmail(emailParams, (err, data) => {
-          if (err) {
-            console.log("Error sending email:", err);
-          } else {
-            console.log("Email sent successfully:", data);
-          }
-        });
-
+        sendMail(request.payload["email"], content);
         return response
           .response({ status: "ok", data: "Reset Password" })
           .code(200);

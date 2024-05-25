@@ -77,13 +77,6 @@ export let mentorRoute = [
             data["mentor_profile"]["professional_info"] ?? null,
         };
 
-        // const mentor = await Mentor.findOneAndUpdate(
-        //   { account: account.id },
-        //   { $set: mentorField },
-        //   { new: true, upsert: true, setDefaultOnInsert: true }
-        // );
-
-        // Check whether mentor profile already exists
         const mentorExist = await Mentor.findOne({
           account: request.auth.credentials.accountId,
         });
@@ -134,7 +127,6 @@ export let mentorRoute = [
           "email",
         ]);
 
-        // return response.response({ status: 'ok', data: 'Profile created successfully' }).code(201);
         return response
           .response({ status: "ok", data: responseData })
           .code(201);

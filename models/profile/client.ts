@@ -76,6 +76,9 @@ const ClientSchema = new Schema({
   ],
 
   social_media: {
+    websiteURL: {
+      type: String,
+    },
     twitter: {
       type: String,
     },

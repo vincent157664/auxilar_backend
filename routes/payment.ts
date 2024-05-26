@@ -167,7 +167,9 @@ export let paymentRoute = [
               Authorization: `Bearer ${access_token}`,
             },
           });
-          account.balance -= parseInt(transaction?.data.batch_header?.amount?.value);
+          account.balance -= parseInt(
+            transaction?.data.batch_header?.amount?.value
+          );
           account.save();
           const transactionData = new Transaction({
             transaction: transaction.data,

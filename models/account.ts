@@ -56,6 +56,10 @@ const AccountSchema = new Schema({
     type: Number,
     default: 0,
   },
+  totalWithdrawn: {
+    type: Number,
+    default: 0,
+  },
 });
 
 const Account = mongoose.model("account", AccountSchema);

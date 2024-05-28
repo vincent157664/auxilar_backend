@@ -65,10 +65,12 @@ export let paymentRoute = [
           email: request.auth.credentials.email,
         });
         const transaction = new Transaction({ transaction: order });
-        transaction.save();
+        await transaction.save();
         const payload = order.purchase_units[0].amount.value;
-        account.balance + parseInt(payload);
-        account.save();
+        console.log(parseInt(payload));
+        account.balance += parseInt(payload);
+        await account.save();
+        console.log("account balance is", account.balance);
         return response
           .response({
             status: "Deposite completed successfully",
@@ -168,6 +170,9 @@ export let paymentRoute = [
             },
           });
           account.balance -= parseInt(
+            transaction?.data.batch_header?.amount?.value
+          );
+          account.totalWithdrawn += parseInt(
             transaction?.data.batch_header?.amount?.value
           );
           account.save();

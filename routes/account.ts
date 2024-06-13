@@ -155,6 +155,7 @@ export let accountRoute = [
           .code(201);
         // linkUrl: `localhost:3000/verify-email/${token}`,
       } catch (error) {
+        console.log(error);
         return response.response(error).code(500);
       }
     },

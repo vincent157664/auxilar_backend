@@ -61,8 +61,6 @@ export const ProfileSchema = Joi.object({
     .allow(null)
     .allow("")
     .meta({ swaggerType: "file" }),
-
-  
 });
 
 export const updateSummarySchema = Joi.object({

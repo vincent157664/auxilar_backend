@@ -37,7 +37,6 @@ export let availableTimeRoute = [
     handler: async (request: Request, response: ResponseToolkit) => {
       try {
         const currentDate = new Date().toUTCString();
-        // check whether schedule already exist.
         const isAlreadyExist = await AvailableTime.findOne({
           email: request.auth.credentials.email,
         });

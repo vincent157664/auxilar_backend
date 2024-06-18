@@ -12,7 +12,6 @@ import {
   updateSummarySwagger,
 } from "../../swagger/profile/mentor";
 import {
-  ProfileSchema,
   updateAvatarSchema,
   updatePaymentInfoSchema,
   updatePersonalInfoSchema,
@@ -23,117 +22,148 @@ import {
 import Account from "../../models/account";
 import Mentor from "../../models/profile/mentor";
 import mongoose from "mongoose";
+import { any, string } from "joi";
 
 const options = { abortEarly: false, stripUnknown: true };
+const ProfileSchema = Joi.object({
+  avatar: Joi.string(),
+
+  country: Joi.string().required().messages({
+    "any.required": "Please provide country",
+  }),
+
+  state: Joi.string().allow(null).allow(""),
+
+  city: Joi.string().allow(null).allow(""),
+
+  address: Joi.string().required().messages({
+    "any.required": "Please provide address.",
+  }),
+
+  languages: Joi.array().required().messages({
+    "any.required": "Please provide languages",
+  }),
+
+  summary: Joi.string().required().messages({
+    "any.required": "Please provide summary",
+  }),
+
+  social_media: Joi.object(),
+
+  payment_verify: Joi.boolean(),
+  payment_info: Joi.object(),
+
+  professional_info: Joi.object().required().messages({
+    "any.required": "Please provide professional information",
+  }),
+});
 
 export let mentorRoute = [
   {
     method: "POST",
     path: "/",
-    options: {
+    config: {
       auth: "jwt",
-      description: "Create mentor profile",
-      plugins: ProfileSwagger,
-      tags: ["api", "mentor"],
-      validate: {
-        payload: ProfileSchema,
-        options,
-        failAction: (request, h, error) => {
-          const details = error.details.map((d) => {
-            return { err: d.message, path: d.path };
-          });
-          return h.response(details).code(400).takeover();
-        },
+      description: "Creatre mentor profile",
+      payload: {
+        maxBytes: 10485760000,
+        output: "stream",
+        parse: true,
+        allow: "multipart/form-data",
+        multipart: { output: "stream" },
       },
-    },
-    handler: async (request: Request, response: ResponseToolkit) => {
-      try {
-        const account = await Account.findById(
-          request.auth.credentials.accountId
-        );
-        // Check account type
-        if (account.account_type !== "mentor") {
-          return response
-            .response({ status: "err", err: "Not allowed" })
-            .code(403);
-        }
 
-        const data = request.payload;
+      handler: async (request: Request, response: ResponseToolkit) => {
+        try {
+          const account = await Account.findById(
+            request.auth.credentials.accountId
+          );
+          // Check account type
+          if (account.account_type !== "mentor") {
+            return response
+              .response({ status: "err", err: "Not allowed" })
+              .code(403);
+          }
 
-        const mentorField = {
-          account: account.id,
-          email: account.email,
-          avatar: data["mentor_profile"]["avatar"] ?? null,
-          country: data["mentor_profile"]["country"],
-          state: data["mentor_profile"]["state"] ?? null,
-          city: data["mentor_profile"]["city"] ?? null,
-          address: data["mentor_profile"]["address"],
-          languages: data["mentor_profile"]["languages"],
-          summary: data["mentor_profile"]["summary"],
-          social_media: data["mentor_profile"]["social_media"] ?? null,
-          payment_verify: data["mentor_profile"]["payment_verify"] ?? null,
-          payment_info: data["mentor_profile"]["payment_info"] ?? null,
-          professional_info:
-            data["mentor_profile"]["professional_info"] ?? null,
-        };
+          const data = request?.payload;
+          const mentorProfile = JSON.parse(data["mentorProfile"]);
 
-        const mentorExist = await Mentor.findOne({
-          account: request.auth.credentials.accountId,
-        });
+          const mentorField = {
+            account: account.id,
+            email: account.email,
+            avatar: mentorProfile["avatar"] ?? null,
+            country: mentorProfile["country"],
+            state: mentorProfile["state"] ?? null,
+            city: mentorProfile["city"] ?? null,
+            address: mentorProfile["address"],
+            languages: mentorProfile["languages"],
+            summary: mentorProfile["summary"],
+            social_media: mentorProfile["social_media"] ?? null,
+            payment_verify: mentorProfile["payment_verify"] ?? null,
+            payment_info: mentorProfile["payment_info"] ?? null,
+            professional_info: mentorProfile["professional_info"] ?? null,
+          };
 
-        if (mentorExist)
-          return response
-            .response({ status: "err", err: "already exists" })
-            .code(403);
+          console.log("mentorField ------>", mentorField);
 
-        const mentor = new Mentor(mentorField);
-        await mentor.save();
-
-        if (data["file"]) {
-          data["file"].forEach(async (fileItem) => {
-            const bucketdb = mongoose.connection.db;
-            const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
-              bucketName: "messageFiles",
-            });
-
-            const attached_file = fileItem;
-
-            const uploadStream = bucket.openUploadStream(
-              attached_file?.hapi?.filename
-            );
-            uploadStream.on("finish", async (file) => {
-              //record attached_files info to database
-
-              await Mentor.findOneAndUpdate(
-                { account: request.auth.credentials.accountId },
-                {
-                  $set: {
-                    resume: {
-                      name: attached_file?.hapi?.filename,
-                      file_id: file._id,
-                    },
-                  },
-                }
-              );
-            });
-
-            await attached_file?.pipe(uploadStream);
+          const mentorExist = await Mentor.findOne({
+            account: request.auth.credentials.accountId,
           });
+
+          if (mentorExist)
+            return response
+              .response({ status: "err", err: "already exists" })
+              .code(403);
+
+          const mentor = new Mentor(mentorField);
+          await mentor.save();
+
+          if (data["file"]) {
+            data["file"].forEach(async (fileItem) => {
+              const bucketdb = mongoose.connection.db;
+              const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
+                bucketName: "messageFiles",
+              });
+
+              const attached_file = fileItem;
+
+              const uploadStream = bucket.openUploadStream(
+                attached_file?.hapi?.filename
+              );
+              uploadStream.on("finish", async (file) => {
+                //record attached_files info to database
+
+                await Mentor.findOneAndUpdate(
+                  { account: request.auth.credentials.accountId },
+                  {
+                    $set: {
+                      resume: {
+                        name: attached_file?.hapi?.filename,
+                        file_id: file._id,
+                      },
+                    },
+                  }
+                );
+              });
+
+              await attached_file?.pipe(uploadStream);
+            });
+          }
+
+          const responseData = await mentor.populate("account", [
+            "firt_name",
+            "last_name",
+            "email",
+          ]);
+
+          return response
+            .response({ status: "ok", data: responseData })
+            .code(201);
+        } catch (error) {
+          console.log(error);
+          return response.response({ status: "err", err: error }).code(501);
         }
-
-        const responseData = await mentor.populate("account", [
-          "firt_name",
-          "last_name",
-          "email",
-        ]);
-
-        return response
-          .response({ status: "ok", data: responseData })
-          .code(201);
-      } catch (error) {
-        console.log(error);
-        return response.response({ status: "err", err: error }).code(501);
-      }
+      },
     },
   },
 
@@ -527,7 +557,7 @@ export let mentorRoute = [
       },
       validate: {
         payload: Joi.object({
-          file: Joi.array().allow(null).allow("").meta({ swaggerType: "file" }),
+          file: Joi.object().meta({ swaggerType: "file" }),
         }),
         failAction: (request, h, error) => {
           return h.response({ err: error.message }).code(400).takeover();
@@ -537,35 +567,34 @@ export let mentorRoute = [
         try {
           const data = request.payload;
 
-          data["file"].forEach(async (fileItem) => {
-            const bucketdb = mongoose.connection.db;
-            const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
-              bucketName: "messageFiles",
-            });
-
-            const attached_file = fileItem;
-
-            const uploadStream = bucket.openUploadStream(
-              attached_file.hapi.filename
-            );
-            uploadStream.on("finish", async (file) => {
-              //record attached_files info to database
-
-              await Mentor.findOneAndUpdate(
-                { account: request.auth.credentials.accountId },
-                {
-                  $set: {
-                    resume: {
-                      name: attached_file.hapi.filename,
-                      file_id: file._id,
-                    },
-                  },
-                }
-              );
-            });
-
-            await attached_file.pipe(uploadStream);
+          const bucketdb = mongoose.connection.db;
+          const bucket = new mongoose.mongo.GridFSBucket(bucketdb, {
+            bucketName: "messageFiles",
           });
+
+          const attached_file = data["file"];
+
+          const uploadStream = bucket.openUploadStream(
+            attached_file.hapi.filename
+          );
+          uploadStream.on("finish", async (file) => {
+            //record attached_files info to database
+
+            await Mentor.findOneAndUpdate(
+              { account: request.auth.credentials.accountId },
+              {
+                $set: {
+                  resume: {
+                    name: attached_file.hapi.filename,
+                    file_id: file._id,
+                  },
+                },
+              }
+            );
+          });
+
+          await attached_file.pipe(uploadStream);
+
           const updatedMentor = await Mentor.find({
             account: request.auth.credentials.accountId,
           });
